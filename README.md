@@ -1,6 +1,6 @@
 # Hanyutils
 
-Utilities for dealing with Chinese characters and pinyin.
+Utilities for dealing with Chinese characters (hanzi) and pinyin.
 
 ## Installation
 
@@ -14,10 +14,13 @@ def deps do
 end
 ```
 
+Note that this package automatically generates functions based on a (large) file.
+Therefore, compiling the dependency may take some time.
+
 ## Usage
 
-This package defines two modules: `Pinyin` and `Hanzi`. The former deals with
-pinyin, while the latter deals with hanzi.
+This package defines two modules: `Pinyin` and `Hanzi`.
+The former deals with pinyin, while the latter deals with hanzi.
 
 Documentation about both modules can be found at [https://hexdocs.pm/hanyutils](https://hexdocs.pm/hanyutils).
 The most important provided functions are shown below.
