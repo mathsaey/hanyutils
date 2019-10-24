@@ -19,8 +19,15 @@ defmodule Pinyin do
     |> Enum.with_index(1)
     |> Enum.map(fn {mapped, idx} ->
       defp char_with_tone(unquote(original), unquote(idx)), do: unquote(mapped)
+
+      # Avoid "cannot match" warnings
+      unless original == "v" do
+        defp char_tone(unquote(mapped)), do: unquote(idx)
+      end
     end)
   end
+
+  defp char_tone(_), do: -1
 
   @doc """
   Replace easy-to-type pinyin with easy-to-read pinyin
@@ -57,6 +64,8 @@ defmodule Pinyin do
     add_tone(word, String.to_integer(digit))
   end
 
+  # TODO: Add deprettify
+
   @doc """
   Add a tone to a pinyin word
 
@@ -86,6 +95,27 @@ defmodule Pinyin do
   def add_tone(word, tone) when tone in 0..4 do
     vowel = word |> String.codepoints() |> Enum.reduce(nil, &select_max/2)
     String.replace(word, vowel, char_with_tone(vowel, tone))
+  end
+
+  @doc """
+  Get the tone of a pinyin word.
+
+  Figure out the tone of a pinyin word based on its tone marker. Handy when
+  exporting pinyin to other formats. Returns -1 if the word has no tone markers.
+
+  ## Examples
+
+      iex> Pinyin.get_tone("nǐ")
+      3
+      iex> Pinyin.get_tone("ni")
+      -1
+  """
+  @spec get_tone(String.t()) :: -1 | 1..4
+  def get_tone(word) do
+    word
+    |> String.codepoints()
+    |> Enum.map(&char_tone/1)
+    |> Enum.reduce(-1, &max/2)
   end
 
   # Pinyin precedence rules
