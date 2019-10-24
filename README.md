@@ -2,6 +2,8 @@
 
 Utilities for dealing with Chinese characters (hanzi) and pinyin.
 
+Feature requests, issues and pull requests are welcome!
+
 ## Installation
 
 Add `hanyutils` to your list of dependencies in `mix.exs`:
