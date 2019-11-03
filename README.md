@@ -36,7 +36,7 @@ iex> Hanzi.to_pinyin("你好")
 "nǐhǎo"
 ```
 
-## Pinyin
+### Pinyin
 
 ```
 iex> Pinyin.prettify("ni3hao3")
@@ -44,6 +44,12 @@ iex> Pinyin.prettify("ni3hao3")
 iex> Pinyin.prettify("lve4")
 "lüè"
 ```
+
+## Note on characters with multiple pronunciations
+
+Certain characters have multiple possible readings. Be aware that this library
+always picks the most customary (according to the Unicode Standard) reading for
+mainland China.
 
 ## License
 

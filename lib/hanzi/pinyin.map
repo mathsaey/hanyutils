@@ -19,7 +19,8 @@
 # =============================================================================
 
 # Format: each line contains the UTF-16 encoding of a charachter (in base 16)
-# followed by its pronounciation in pinyin
+# followed by its pronounciation in pinyin. When multiple pronounciations are
+# present, the mainland version was selected.
 
 3400	qiū
 3401	tiàn
