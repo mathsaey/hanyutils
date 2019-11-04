@@ -49,7 +49,8 @@ iex> Pinyin.prettify("lve4")
 
 Certain characters have multiple possible readings. Be aware that this library
 always picks the most customary (according to the Unicode Standard) reading for
-mainland China.
+mainland China. The next version of the Hanzi module will provide more options
+to deal with this situation.
 
 ## License
 
