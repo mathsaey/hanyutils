@@ -15,6 +15,7 @@ defmodule Hanyutils.MixProject do
 
   defp deps do
     [
+      {:nimble_parsec, "~> 0.5"},
       {:ex_doc, "~> 0.21", only: :dev, runtime: false},
       {:dialyxir, "~> 1.0.0-rc.7", only: [:dev], runtime: false}
     ]
