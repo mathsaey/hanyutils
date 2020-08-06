@@ -76,6 +76,7 @@ defmodule Pinyin do
   is created.
 
   ## Examples
+
       iex> Pinyin.create("ni", 3)
       %Pinyin{tone: 3, word: "ni"}
       iex> Pinyin.create("lüe", 4)
