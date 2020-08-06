@@ -2,28 +2,24 @@ defmodule Pinyin do
   @moduledoc """
   Utilities to deal with pinyin syllables and groups thereof.
 
-  The main goal of this module is to provide functions to manipulate strings
-  that contain pinyin words, which are potentially mixed with other content.
-  Users of this module can use `read/2`, `read!/2` or `sigil_p/2` to parse a
-  string and turn it into a `t:pinyin_list/0`. Afterwards, such a list can be
-  converted into a "numbered" or a "marked" string. Numbered strings are
-  created with `numbered/1`; in this representation, tone marks are not added
-  to the pinyin syllable, numbers are used to indicate the tone instead. When
-  `marked/1` is used, pinyin is printed with tone marks.
+  The main goal of this module is to provide functions to manipulate strings that contain pinyin
+  words, which are potentially mixed with other content.  Users of this module can use `read/2`,
+  `read!/2` or `sigil_p/2` to parse a string and turn it into a `t:pinyin_list/0`. Afterwards,
+  such a list can be converted into a "numbered" or a "marked" string. Numbered strings are
+  created with `numbered/1`; in this representation, tone marks are not added to the pinyin
+  syllable, numbers are used to indicate the tone instead. When `marked/1` is used, pinyin is
+  printed with tone marks.
 
-  When a string is parsed with `read/2`, it is converted into a list containing
-  strings and `t:t/0` structs. These structs encode pinyin syllables. Users of
-  this module generally do not need to worry about manipulating these structs
-  directly, but they are exposed for users who want to handle pinyin using
-  custom logic. `create/2`, `from_marked/1` and `from_numbered/1` can be used
-  to directly create a pinyin struct for a given syllable. Like
-  `t:pinyin_list/0`, `t:t/0` structs can be converted to strings with
-  `numbered/1` and `marked/1`.
+  When a string is parsed with `read/2`, it is converted into a list containing strings and
+  `t:t/0` structs. These structs encode pinyin syllables. Users of this module generally do not
+  need to worry about manipulating these structs directly, but they are exposed for users who want
+  to handle pinyin using custom logic. `create/2`, `from_marked/1` and `from_numbered/1` can be
+  used to directly create a pinyin struct for a given syllable. Like `t:pinyin_list/0`, `t:t/0`
+  structs can be converted to strings with `numbered/1` and `marked/1`.
   """
 
-  # Note for developers, a lot of the heavy lifting for the functions in this
-  # module is performed at compile time. The Pinyin.Chars and Pinyin.Parsers
-  # modules contain the code to do this.
+  # Note for developers, a lot of the heavy lifting for the functions in this module is performed
+  # at compile time. The Pinyin.Chars and Pinyin.Parsers modules contain the code to do this.
 
   defmodule ParseError do
     @moduledoc """
@@ -45,13 +41,12 @@ defmodule Pinyin do
   @typedoc """
   Representation of a pinyin syllable.
 
-  This struct represents a single syllable in pinyin. It stores a textual
-  representation of the syllable _without_ any tone marks. In this
-  representation, `ü` is always stored as v. The tone of the syllable is
-  stored in the `tone` field. `0` represents the neutral tone.
+  This struct represents a single syllable in pinyin. It stores a textual representation of the
+  syllable _without_ any tone marks. In this representation, `ü` is always stored as v. The tone
+  of the syllable is stored in the `tone` field. `0` represents the neutral tone.
 
-  Do not create a pinyin struct manually. Instead, use a function such as
-  `create/2`, `from_marked/1`, `from_numbered/1` or use the `sigil_p/2` sigil.
+  Do not create a pinyin struct manually. Instead, use a function such as `create/2`,
+  `from_marked/1`, `from_numbered/1` or use the `sigil_p/2` sigil.
   """
   @type t :: %__MODULE__{tone: 0..4, word: String.t()}
 
@@ -70,10 +65,9 @@ defmodule Pinyin do
   @doc """
   Create a Pinyin struct (`t:t/0`) from an unmarked string and a tone numeral.
 
-  This function is useful if you want to dynamically create pinyin structs. The
-  use of this function is preferred over directly using `%Pinyin{}`, as this
-  function normalises `word` and verifies `tone` is valid before the struct
-  is created.
+  This function is useful if you want to dynamically create pinyin structs. The use of this
+  function is preferred over directly using `%Pinyin{}`, as this function normalises `word` and
+  verifies `tone` is valid before the struct is created.
 
   ## Examples
 
@@ -95,10 +89,9 @@ defmodule Pinyin do
   @doc """
   Create a pinyin struct (`t:t/0`) from a string with tone marks.
 
-  When converting the string, the tone marker is stripped and placed in the
-  `tone` field of the resulting struct. An `ArgumentError` is thrown if multiple
-  tone marks are present. Therefore, this function should only be used for a
-  single pinyin word.
+  When converting the string, the tone marker is stripped and placed in the `tone` field of the
+  resulting struct. An `ArgumentError` is thrown if multiple tone marks are present. Therefore,
+  this function should only be used for a single pinyin word.
 
   ## Examples
 
@@ -127,11 +120,11 @@ defmodule Pinyin do
   @doc """
   Create a pinyin struct (`t:t/0`) from a string with a tone number.
 
-  The tone number has to be 1, 2, 3 or 4 and has to be the last element of the
-  string. If this is not the case, an invalid pinyin struct is obtained.
+  The tone number has to be 1, 2, 3 or 4 and has to be the last element of the string. If this is
+  not the case, an invalid pinyin struct is obtained.
 
-  If the tone of the word is known upfront, the use of `create/2` should be
-  preferred, as it does not need to parse the string.
+  If the tone of the word is known upfront, the use of `create/2` should be preferred, as it does
+  not need to parse the string.
 
   ## Examples
 
@@ -159,46 +152,40 @@ defmodule Pinyin do
   @doc """
   Read a string and convert it into a list of string and pinyin structs.
 
-  This function reads a string containing pinyin mixed with normal text. The
-  output of this function is a list of strings and pinyin structs. White space
-  and punctuation will be separated from other strings.
+  This function reads a string containing pinyin mixed with normal text. The output of this
+  function is a list of strings and pinyin structs. White space and punctuation will be separated
+  from other strings.
 
-  The input string may contain tone-marked (e.g. "nǐ") pinyin, numbered ("ni3")
-  pinyin or a mix thereof (nǐ hao3). Note that in numbered pinyin mode tone
-  numerals __must not__ be separated from their word. For instance, "ni3" will
-  be correctly parsed as "nǐ", "ni 3" will not. When tone marked pinyin is used
-  the tone must be marked on the correct letter. For instance, hǎo will parse
-  correctly, haǒ will not; we recommend the use of numbered pinyin if there is
-  uncertainty about the location of the tone mark.
+  The input string may contain tone-marked (e.g. "nǐ") pinyin, numbered ("ni3") pinyin or a mix
+  thereof (nǐ hao3). Note that in numbered pinyin mode tone numerals __must not__ be separated
+  from their word. For instance, "ni3" will be correctly parsed as "nǐ", "ni 3" will not. When
+  tone marked pinyin is used the tone must be marked on the correct letter. For instance, hǎo will
+  parse correctly, haǒ will not; we recommend the use of numbered pinyin if there is uncertainty
+  about the location of the tone mark.
 
   ## Parse Modes
 
-  By default, this function only accepts strings which consists exclusively of
-  pinyin, whitespace and puncutation. Parsing any text that cannot be
-  interpreted as pinyin will result in an error:
+  By default, this function only accepts strings which consists exclusively of pinyin, whitespace
+  and puncutation. Parsing any text that cannot be interpreted as pinyin will result in an error:
 
       iex> Pinyin.read("Ni3hao3!")
       {:ok, [%Pinyin{tone: 3, word: "Ni"}, %Pinyin{tone: 3, word: "hao"}, "!"]}
       iex> Pinyin.read("Ni3hao3, hello!")
       {:error, "hello!"}
 
-  This behaviour can be tweaked if pinyin mixed with regular text needs to be
-  parsed; this can be done by passing a `mode` to this function. There are 3
-  available modes:
+  This behaviour can be tweaked if pinyin mixed with regular text needs to be parsed; this can be
+  done by passing a `mode` to this function. There are 3 available modes:
 
-  - `:exclusive`: The default. Every character (except white space and
-    punctuation) is interpreted as pinyin. If this is not possible, an error
-    is returned.
-  - `:words`: Any word (i.e. a continuous part of the string that does not
-    contain whitespace or punctuation) is either interpreted as a sequence of
-    pinyin syllables or as non-pinyin text. If a word contains any characters
-    that cannot be interpreted as pinyin, the whole word is considered to be
-    non-pinyin text. This mode does not return errors.
-  - `:mixed`: Any word can contain a mixture of pinyin and non-pinyin
-    characters. The read function will interpret anything it can interpret as
-    pinyin as pinyin and leaves the other text unmodified. This is mainly
-    useful to mix characters and pinyin. It is not recommended to use this mode
-    to mix pinyin and normal text. This mode does not return errors.
+  - `:exclusive`: The default. Every character (except white space and punctuation) is
+    interpreted as pinyin. If this is not possible, an error is returned.
+  - `:words`: Any word (i.e. a continuous part of the string that does not contain whitespace or
+    punctuation) is either interpreted as a sequence of pinyin syllables or as non-pinyin text. If
+    a word contains any characters that cannot be interpreted as pinyin, the whole word is
+    considered to be non-pinyin text. This mode does not return errors.
+  - `:mixed`: Any word can contain a mixture of pinyin and non-pinyin characters. The read
+    function will interpret anything it can interpret as pinyin as pinyin and leaves the other
+    text unmodified. This is mainly useful to mix characters and pinyin. It is not recommended to
+    use this mode to mix pinyin and normal text. This mode does not return errors.
 
   The following examples show the use of all three modes:
 
@@ -223,16 +210,15 @@ defmodule Pinyin do
       iex> Pinyin.read("Ni3好hao3, hello!", :mixed)
       {:ok, [%Pinyin{tone: 3, word: "Ni"}, "好",  %Pinyin{tone: 3, word: "hao"}, ", ", %Pinyin{word: "he"}, "llo", "!"]}
 
-  When `:mixed` or `:word` mode is used, it is possible some words are
-  incorrectly identified as pinyin. This is generally not a problem for users
-  who just wish to use `marked/1` or `numbered/1` on the result of `read/2`,
-  since pinyin syllables with no tone are printed as is.
+  When `:mixed` or `:word` mode is used, it is possible some words are incorrectly identified as
+  pinyin. This is generally not a problem for users who just wish to use `marked/1` or
+  `numbered/1` on the result of `read/2`, since pinyin syllables with no tone are printed as is.
 
   ## Capitalization and -r suffix
 
-  This function is able to read capitalized and uppercase pinyin strings. That
-  is, strings such as "Ni3hao3", "NI3HAO3" and "NI3hao3" are accepted. However,
-  pinyin words with mixed capitalization are not recognized:
+  This function is able to read capitalized and uppercase pinyin strings. That is, strings such as
+  "Ni3hao3", "NI3HAO3" and "NI3hao3" are accepted. However, pinyin words with mixed capitalization
+  are not recognized:
 
       iex> Pinyin.read("Hao3")
       {:ok, [%Pinyin{tone: 3, word: "Hao"}]}
@@ -241,9 +227,8 @@ defmodule Pinyin do
       iex> Pinyin.read("HaO3")
       {:error, "HaO3"}
 
-  Finally, this function does not detect the _-r_ suffix. Users of the library
-  should take care to fully write out _er_ instead. That is, do not write
-  "zher", use "zheer" instead.
+  Finally, this function does not detect the _-r_ suffix. Users of the library should take care to
+  fully write out _er_ instead. That is, do not write "zher", use "zheer" instead.
 
       iex> Pinyin.read("zher")
       {:error, "zher"}
@@ -293,12 +278,12 @@ defmodule Pinyin do
   @doc """
   Sigil to create a pinyin list or struct.
 
-  When used without any modifiers, this sigil converts its input into a pinyin
-  list through the use of `read!/2` in `:exclusive` mode. The `w` and
-  `m` modifiers can be used to use `:words` or `:mixed` mode respectively.
+  When used without any modifiers, this sigil converts its input into a pinyin list through the
+  use of `read!/2` in `:exclusive` mode. The `w` and `m` modifiers can be used to use `:words` or
+  `:mixed` mode respectively.
 
-  When this sigil is called with the `s` modifier, a pinyin struct is created
-  by calling `from_numbered/1`.
+  When this sigil is called with the `s` modifier, a pinyin struct is created by calling
+  `from_numbered/1`.
 
   ## Examples
 
@@ -343,9 +328,9 @@ defmodule Pinyin do
   @doc """
   Convert a `t:t/0` or `t:pinyin_list/0` to a numbered version.
 
-  The numbered version consists of the word without tone markings followed by
-  the number of the tone. It is often used when typing pinyin manually. Any
-  occurence of "ü" is shown as "v". Non-pinyin text is not modified.
+  The numbered version consists of the word without tone markings followed by the number of the
+  tone. It is often used when typing pinyin manually. Any occurence of "ü" is shown as "v".
+  Non-pinyin text is not modified.
 
   ## Examples
 
@@ -376,9 +361,8 @@ defmodule Pinyin do
   @doc """
   Convert a `t:t/0` or `t:pinyin_list/0` to a tone-marked string.
 
-  The tone-marked string consists of the pinyin word with the tone added in
-  the correct location. It is generally used when printing pinyin. Any
-  occurence of "v" is shown as "ü".
+  The tone-marked string consists of the pinyin word with the tone added in the correct location.
+  It is generally used when printing pinyin. Any occurence of "v" is shown as "ü".
 
   ## Examples
 
@@ -433,9 +417,8 @@ defmodule Pinyin do
   defp select_max("O", _), do: "O"
   defp select_max(_, "O"), do: "O"
 
-  # in the case of ui, the second letter takes the mark
-  # Keep in mind the "left" argument is the new letter, this is done to make
-  # it easy to pass the function to reduce.
+  # in the case of ui, the second letter takes the mark Keep in mind the "left" argument is the
+  # new letter, this is done to make it easy to pass the function to reduce.
   defp select_max("i", "u"), do: "i"
   defp select_max("I", "U"), do: "I"
   defp select_max("i", "U"), do: "i"

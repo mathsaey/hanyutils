@@ -137,13 +137,11 @@ defmodule Pinyin.Parsers do
   # Please be careful when reformatting these entries.
   # Based on https://en.wikipedia.org/wiki/Pinyin#Finals
   #
-  # Finals are split into finals which are combined with an initial and
-  # finals which can be used standalone. This is done to avoid parsing
-  # something like "i" as a valid pinyin word.
+  # Finals are split into finals which are combined with an initial and finals which can be used
+  # standalone. This is done to avoid parsing something like "i" as a valid pinyin word.
   #
-  # In both cases, the table needs to be sorted by length to ensure short
-  # elements don't prevent longer ones from matching. (e.g "iang" needs to
-  # be tested before "ia").
+  # In both cases, the table needs to be sorted by length to ensure short elements don't prevent
+  # longer ones from matching. (e.g "iang" needs to be tested before "ia").
 
   # Finals which need to be combined with an initial
   combination_finals = ~w(
@@ -178,17 +176,13 @@ defmodule Pinyin.Parsers do
   standalone_finals_upper = Utils.wordlist_to_upcase_parser(standalone_finals)
   standalone_finals = Utils.wordlist_to_mixed_case_parser(standalone_finals)
 
-  marked_combination_finals_upper =
-    Utils.wordlist_to_upcase_parser(marked_combination_finals)
+  marked_combination_finals_upper = Utils.wordlist_to_upcase_parser(marked_combination_finals)
 
-  marked_combination_finals =
-    Utils.wordlist_to_parser(marked_combination_finals)
+  marked_combination_finals = Utils.wordlist_to_parser(marked_combination_finals)
 
-  marked_standalone_finals_upper =
-    Utils.wordlist_to_upcase_parser(marked_standalone_finals)
+  marked_standalone_finals_upper = Utils.wordlist_to_upcase_parser(marked_standalone_finals)
 
-  marked_standalone_finals =
-    Utils.wordlist_to_mixed_case_parser(marked_standalone_finals)
+  marked_standalone_finals = Utils.wordlist_to_mixed_case_parser(marked_standalone_finals)
 
   numbered_pinyin_syllable =
     Utils.num_py_parser(
@@ -218,14 +212,11 @@ defmodule Pinyin.Parsers do
       marked_standalone_finals_upper
     )
 
-  numbered_pinyin_syllable =
-    choice([numbered_pinyin_syllable, numbered_pinyin_syllable_upper])
+  numbered_pinyin_syllable = choice([numbered_pinyin_syllable, numbered_pinyin_syllable_upper])
 
-  marked_pinyin_syllable =
-    choice([marked_pinyin_syllable, marked_pinyin_syllable_upper])
+  marked_pinyin_syllable = choice([marked_pinyin_syllable, marked_pinyin_syllable_upper])
 
-  # Order matters here, marked must go first, or numbered may consume a shorter
-  # valid pinyin word
+  # Order matters here, marked must go first, or numbered may consume a shorter valid pinyin word
   pinyin_syllable = choice([marked_pinyin_syllable, numbered_pinyin_syllable])
   pinyin_word = pinyin_syllable |> Utils.word_parser()
 
