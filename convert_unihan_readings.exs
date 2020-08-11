@@ -6,7 +6,7 @@
 #
 # Usage: convert_unihan_readings.exs input [output]
 #   `input` should be a Unihan_Readings.txt file.
-#   `output` can be any file (relative to cwd), it defaults to lib/hanzi/pinyin.map
+#   `output` can be any file (relative to cwd), it defaults to lib/hanzi/characters.map
 #
 # The Unihan_Readings.txt file can be found inside a zip archive that can be download here:
 # https://www.unicode.org/Public/UCD/latest/ucd/Unihan.zip.
@@ -19,7 +19,7 @@
 # - 'p' entries contain the most common pronunciation of the character. If the most common
 #   pronunciation is different for mainland China and Taiwan two pinyin entries can be found here.
 # - An 'a' entry contains any "alternative" readings for the character.
-# - 'a' and 'p' entries of the same character should be grouped together. I.e. if a character has
+# - 'a' and 'p' entries of the same character should be grouped together I.e. if a character has
 #   both an 'a' and a 'p' entry, they should be on consecutive lines.
 
 header = """
@@ -40,7 +40,7 @@ delimiter = """
   [i, o] ->
     {Path.expand(i), Path.expand(o)}
   [i] ->
-    {Path.expand(i), Path.join(__DIR__, "lib/hanzi/pinyin.map")}
+    {Path.expand(i), Path.join(__DIR__, "lib/hanzi/characters.map")}
   _ ->
     script = Path.relative_to_cwd(__ENV__.file)
     IO.puts "Invalid arguments. Usage: `elixir #{script} input [output]`"
