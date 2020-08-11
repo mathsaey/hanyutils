@@ -14,7 +14,7 @@ Utilities for dealing with Chinese characters (hanzi) and pinyin.
   - Read both tone-marked and numbered pinyin strings. Supports capitalized and
   uppercase pinyin words, and supports strings containing pinyin mixed with
   regular text
-  - Convert to either representation
+  - Convert to either representation (numbered or tone marked)
 - Direct access to the building blocks of the library for more esoteric use cases
 
 ## Installation
