@@ -265,7 +265,7 @@ defmodule Pinyin do
       iex> Pinyin.read!("ni 3")
       ** (Pinyin.ParseError) Error occurred when attempting to parse: `3`
   """
-  @spec read(String.t(), :exclusive | :words | :mixed) ::
+  @spec read!(String.t(), :exclusive | :words | :mixed) ::
           pinyin_list() | no_return()
   def read!(string, mode \\ :exclusive)
       when mode in [:exclusive, :words, :mixed] do
