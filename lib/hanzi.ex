@@ -243,22 +243,22 @@ defmodule Hanzi do
 
   ## Examples
 
-      iex> Hanzi.only_characters?(["你", "好"])
+      iex> Hanzi.characters?(["你", "好"])
       true
-      iex> Hanzi.only_characters?(["你", "boo", "好"])
+      iex> Hanzi.characters?(["你", "boo", "好"])
       false
-      iex> Hanzi.only_characters?("你好")
+      iex> Hanzi.characters?("你好")
       true
-      iex> Hanzi.only_characters?("你 好")
+      iex> Hanzi.characters?("你 好")
       false
   """
-  @spec only_characters?(String.t() | [String.t()]) :: boolean()
-  def only_characters?(l) when is_list(l), do: Enum.all?(l, &character?/1)
+  @spec characters?(String.t() | [String.t()]) :: boolean()
+  def characters?(l) when is_list(l), do: Enum.all?(l, &character?/1)
 
-  def only_characters?(str) when is_binary(str) do
+  def characters?(str) when is_binary(str) do
     str
     |> String.graphemes()
-    |> only_characters?()
+    |> characters?()
   end
 
 
