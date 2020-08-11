@@ -31,7 +31,7 @@ end
 
 Note that this package automatically generates functions based on a (large)
 file.
-Therefore, compiling this dependency takes some time.
+Therefore, compiling this dependency takes some time (around a minute on my machine).
 
 ## Usage
 
