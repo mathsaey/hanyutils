@@ -90,9 +90,7 @@ defmodule Hanzi do
   def from_character(character), do: Hanzi.Map.lookup(character)
 
   @doc """
-  Check if a character is a valid Han character.
-
-  This only works on a single character.
+  Check if a _single_ character is a valid Han character.
 
   ## Examples
 
