@@ -33,13 +33,14 @@ defmodule Hanzi.Map do
     m = %{alt: [p | _]} -> Map.put(m, :pron, p)
     any -> any
   end)
-  # |> Enum.map(&struct(Hanzi, &1))
-  # |> Enum.map(fn s = %Hanzi{char: c} ->
-    # def lookup(unquote(c)), do: unquote(Macro.escape(s))
-  # end)
-  |> Enum.map(fn s = %{char: c} ->
-    def lookup(unquote(c)), do: struct(Hanzi, unquote(Macro.escape(s)))
+  |> Enum.map(&struct(Hanzi, &1))
+  |> Enum.map(fn s = %Hanzi{char: c} ->
+    def lookup(unquote(c)), do: unquote(Macro.escape(s))
   end)
+  # For using during development
+  # |> Enum.map(fn s = %{char: c} ->
+  #   def lookup(unquote(c)), do: struct(Hanzi, unquote(Macro.escape(s)))
+  # end)
 
   def lookup(_), do: nil
 end
