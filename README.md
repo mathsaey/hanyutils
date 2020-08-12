@@ -17,6 +17,11 @@ Utilities for dealing with Chinese characters (hanzi) and pinyin.
   - Convert to either representation (numbered or tone marked)
 - Direct access to the building blocks of the library for more esoteric use cases
 
+The following features are planned for a future version of hanyutils:
+
+- Handle punctuation (。,？,！,...) when translating Han characters
+- Support for 儿 (e.g. translate 这儿 to "zhe'er" instead of "zheer")
+
 ## Installation
 
 Add `hanyutils` to your list of dependencies in `mix.exs`:
