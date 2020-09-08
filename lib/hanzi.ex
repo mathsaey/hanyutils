@@ -184,7 +184,7 @@ defmodule Hanzi do
       iex> Hanzi.read("hello, 你")
       ["hello, ", %Hanzi{char: "你", pron: %Pinyin{word: "ni", tone: 3}}]
   """
-  @spec read(String.t) :: hanzi_list()
+  @spec read(String.t()) :: hanzi_list()
   def read(string) do
     string
     |> String.graphemes()
@@ -259,6 +259,33 @@ defmodule Hanzi do
     |> characters?()
   end
 
+  @doc """
+  Convert a Hanzi list to a string of characters.
+
+  This function extracts the character of each `t:Hanzi.t/0` in `lst`. Normal strings in the list
+  not modified. After converting the Hanzi in the list to characters, the list is joined with
+  `Enum.join/2`. The `joiner` argument will be passed as the `joiner` to `Enum.join/2`.
+
+  ## Examples
+
+      iex> hanzi(~h/你好/)
+      "你好"
+      iex> hanzi(~h/你hello/)
+      "你hello"
+      iex> hanzi(~h/你好/, ";")
+      "你;好"
+      iex> hanzi(~h/你hello/, ";")
+      "你;hello"
+  """
+  @spec hanzi(hanzi_list(), String.t()) :: String.t()
+  def hanzi(lst, joiner \\ "") do
+    lst
+    |> Enum.map(fn
+      %Hanzi{char: c} -> c
+      str -> str
+    end)
+    |> Enum.join(joiner)
+  end
 
   @doc """
   Convert a Hanzi list to a Pinyin list.
@@ -320,4 +347,3 @@ defimpl Inspect, for: Hanzi do
     concat(["#Hanzi<", c, ">"])
   end
 end
-
