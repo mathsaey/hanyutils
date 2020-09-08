@@ -268,17 +268,17 @@ defmodule Hanzi do
 
   ## Examples
 
-      iex> hanzi(~h/你好/)
+      iex> characters(~h/你好/)
       "你好"
-      iex> hanzi(~h/你hello/)
+      iex> characters(~h/你hello/)
       "你hello"
-      iex> hanzi(~h/你好/, ";")
+      iex> characters(~h/你好/, ";")
       "你;好"
-      iex> hanzi(~h/你hello/, ";")
+      iex> characters(~h/你hello/, ";")
       "你;hello"
   """
-  @spec hanzi(hanzi_list(), String.t()) :: String.t()
-  def hanzi(lst, joiner \\ "") do
+  @spec characters(hanzi_list(), String.t()) :: String.t()
+  def characters(lst, joiner \\ "") do
     lst
     |> Enum.map(fn
       %Hanzi{char: c} -> c
