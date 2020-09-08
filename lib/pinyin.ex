@@ -378,11 +378,10 @@ defmodule Pinyin do
   """
   @spec marked(t() | pinyin_list()) :: String.t()
   def marked(%Pinyin{word: w, tone: t}) do
-    vowel = w |> String.codepoints() |> Enum.reduce(nil, &select_max/2)
+    word = String.replace(w, "v", "ü")
+    vowel = word |> String.codepoints() |> Enum.reduce(nil, &select_max/2)
 
-    w
-    |> String.replace("v", "ü")
-    |> String.replace(vowel, Pinyin.Char.with_tone(vowel, t))
+    String.replace(word, vowel, Pinyin.Char.with_tone(vowel, t))
   end
 
   def marked(list) when is_list(list) do
@@ -429,8 +428,8 @@ defmodule Pinyin do
   defp select_max("U", "i"), do: "U"
 
   # If none of the above match whichever vowel is present takes the mark
-  defp select_max(v, _) when v in ["a", "e", "i", "o", "u", "ü"], do: v
-  defp select_max(v, _) when v in ["A", "E", "I", "O", "U", "Ü"], do: v
+  defp select_max(v, _) when v in ["a", "e", "i", "o", "u", "ü", "v"], do: v
+  defp select_max(v, _) when v in ["A", "E", "I", "O", "U", "Ü", "v"], do: v
 
   # If there is no vowel, stay with previous selection
   defp select_max(_, p), do: p
