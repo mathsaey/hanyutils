@@ -206,9 +206,9 @@ defmodule Pinyin do
       iex> Pinyin.read("Ni3hao3!", :mixed)
       {:ok, [%Pinyin{tone: 3, word: "Ni"}, %Pinyin{tone: 3, word: "hao"}, "!"]}
       iex> Pinyin.read("Ni3hao3, hello!", :mixed)
-      {:ok, [%Pinyin{tone: 3, word: "Ni"}, %Pinyin{tone: 3, word: "hao"}, ", ", %Pinyin{word: "he"}, "llo", "!"]}
+      {:ok, [%Pinyin{tone: 3, word: "Ni"}, %Pinyin{tone: 3, word: "hao"}, ", ", %Pinyin{word: "he"}, "l", %Pinyin{word: "lo"}, "!"]}
       iex> Pinyin.read("Ni3好hao3, hello!", :mixed)
-      {:ok, [%Pinyin{tone: 3, word: "Ni"}, "好",  %Pinyin{tone: 3, word: "hao"}, ", ", %Pinyin{word: "he"}, "llo", "!"]}
+      {:ok, [%Pinyin{tone: 3, word: "Ni"}, "好",  %Pinyin{tone: 3, word: "hao"}, ", ", %Pinyin{word: "he"}, "l", %Pinyin{word: "lo"}, "!"]}
 
   When `:mixed` or `:word` mode is used, it is possible some words are incorrectly identified as
   pinyin. This is generally not a problem for users who just wish to use `marked/1` or
@@ -238,8 +238,7 @@ defmodule Pinyin do
   """
   @spec read(String.t(), :exclusive | :words | :mixed) ::
           {:ok, pinyin_list()} | {:error, String.t()}
-  def read(string, mode \\ :exclusive)
-      when mode in [:exclusive, :words, :mixed] do
+  def read(string, mode \\ :exclusive) when mode in [:exclusive, :words, :mixed] do
     res =
       case mode do
         :exclusive -> Pinyin.Parsers.pinyin_only(string)

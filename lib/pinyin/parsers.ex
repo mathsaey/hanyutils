@@ -145,11 +145,11 @@ defmodule Pinyin.Parsers do
 
   # Finals which need to be combined with an initial
   combination_finals = ~w(
-    i  e  a ei  ai ou  ao en  an  ong eng  ang
-      ie ia        iu iao in ian iong ing iang
-    u uo ua ui uai        un uan          uang
-    ü üe                  ün üan
-    v ve                  vn van
+    i  e    a ei  ai ou  ao en  an  ong eng  ang
+      ie   ia        iu iao in ian iong ing iang
+    u uo o ua ui uai        un uan          uang
+    ü üe                    ün üan
+    v ve                    vn van
   ) |> Enum.sort(&(String.length(&1) >= String.length(&2)))
 
   # Finals which are used standalone
