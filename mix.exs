@@ -4,7 +4,7 @@ defmodule Hanyutils.MixProject do
   def project do
     [
       app: :hanyutils,
-      version: "0.2.2",
+      version: "0.2.3",
       elixir: "~> 1.9",
       deps: deps(),
       package: package(),
