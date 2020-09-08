@@ -29,7 +29,7 @@ Add `hanyutils` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:hanyutils, "~> 0.2.1"}
+    {:hanyutils, "~> 0.2.2"}
   ]
 end
 ```
