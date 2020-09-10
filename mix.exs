@@ -22,7 +22,7 @@ defmodule Hanyutils.MixProject do
   end
 
   defp description do
-    "Utilities for dealing with Chinese characters and pinyin."
+    "Flexible, modular, utilities for dealing with Chinese characters and pinyin."
   end
 
   defp package do

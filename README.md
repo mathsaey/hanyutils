@@ -1,6 +1,6 @@
 # Hanyutils
 
-Utilities for dealing with Chinese characters (hanzi) and pinyin.
+Flexible, modular utilities for dealing with Chinese characters (hanzi) and pinyin.
 
 ## Features
 
@@ -44,7 +44,7 @@ If you are dealing with a common use case (e.g. converting all characters in a
 string to pinyin) it is likely your use case is covered by the `Hanyutils`
 module:
 
-```
+```elixir
 iex> Hanyutils.to_marked_pinyin("你好")
 "nǐhǎo"
 iex> Hanyutils.to_numbered_pinyin("你好")
@@ -58,12 +58,21 @@ iex> Hanyutils.number_pinyin("nǐhǎo")
 ```
 
 The `Hanyutils` module is built on top of the `Hanzi` and `Pinyin` modules.
-You can use these lower-level modules directly if your use case is not present
-in `Hanyutils`<sup>[*](#usecasefn)</sup> . As an example, the `to_marked_pinyin` function shown above could
-be replaced by the following code:
+You can use these lower-level modules directly if your use case is not present in `Hanyutils`<sup>[*](#usecasefn)</sup> .
+As an example, the `to_marked_pinyin` function shown above could be replaced by the following code:
 
 ```elixir
-"你好" |> Hanzi.read() |> Hanzi.to_pinyin() |> Pinyin.marked()
+iex> "你好" |> Hanzi.read() |> Hanzi.to_pinyin() |> Pinyin.marked()
+"nǐhǎo"
+```
+
+Alternative versions of this procedure which show all available pronunciations can be written as follows:
+
+```elixir
+iex> "重庆" |> Hanzi.read() |> Hanzi.to_pinyin(&Hanzi.all_pronunciations/1) |> Pinyin.marked()
+"[ zhòng | chóng | tóng ]qìng"
+iex> "重庆" |> Hanzi.read() |> Hanzi.to_pinyin(&Hanzi.all_pronunciations(&1, "{", ";", "}")) |> Pinyin.marked()
+"{zhòng;chóng;tóng}qìng"
 ```
 
 The documentation for all of these modules can be found at [https://hexdocs.pm/hanyutils](https://hexdocs.pm/hanyutils).
