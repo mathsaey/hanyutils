@@ -163,6 +163,25 @@ defmodule Hanzi do
     [left | Enum.intersperse(alt, mid) ++ [right]]
   end
 
+  @doc """
+  Converter that returns a list of all known pronunciations of a character.
+
+  This converter is similar to `all_pronunciations/4`, but it does not include separators around
+  the various pronunciations.
+
+  ## Examples
+
+      iex> Hanzi.list_pronunciations(~h/你/s)
+      [%Pinyin{word: "ni", tone: 3}]
+      iex> Hanzi.list_pronunciations(~h/㓎/s)
+      [%Pinyin{word: "qin", tone: 1}, %Pinyin{word: "qin", tone: 4}, %Pinyin{word: "qin", tone: 3}]
+      iex> Hanzi.list_pronunciations(~h/㓎/s)
+      [%Pinyin{word: "qin", tone: 1}, %Pinyin{word: "qin", tone: 4}, %Pinyin{word: "qin", tone: 3}]
+  """
+  @spec all_pronunciations(t()) :: Pinyin.pinyin_list()
+  def list_pronunciations(%Hanzi{pron: p, alt: []}), do: [p]
+  def list_pronunciations(%Hanzi{pron: _, alt: alt}), do: alt
+
   # ------------- #
   # Hanzi Strings #
   # ------------- #
