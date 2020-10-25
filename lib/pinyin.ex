@@ -73,12 +73,16 @@ defmodule Pinyin do
 
       iex> Pinyin.create("ni", 3)
       %Pinyin{tone: 3, word: "ni"}
+
       iex> Pinyin.create("lüe", 4)
       %Pinyin{tone: 4, word: "lve"}
+
       iex> Pinyin.create("lve", 4)
       %Pinyin{tone: 4, word: "lve"}
+
       iex> Pinyin.create("ni", 5)
       ** (FunctionClauseError) no function clause matching in Pinyin.create/2
+
   """
   @spec create(String.t(), 0..4) :: t()
   def create(word, tone \\ 0) when tone in 0..4 do
@@ -97,10 +101,13 @@ defmodule Pinyin do
 
       iex> Pinyin.from_marked("nǐ")
       %Pinyin{tone: 3, word: "ni"}
+
       iex> Pinyin.from_marked("nǐ")
       %Pinyin{tone: 3, word: "ni"}
+
       iex> Pinyin.from_marked("nǐhǎo")
       ** (ArgumentError) Multiple tone marks present in 'nǐhǎo'
+
   """
   @spec from_marked(String.t()) :: t()
   def from_marked(word) do
@@ -130,10 +137,13 @@ defmodule Pinyin do
 
       iex> Pinyin.from_numbered("ni3")
       %Pinyin{tone: 3, word: "ni"}
+
       iex> Pinyin.from_numbered("ni5")
       %Pinyin{tone: 0, word: "ni5"}
+
       iex> Pinyin.from_numbered("ni")
       %Pinyin{tone: 0, word: "ni"}
+
   """
   @spec from_numbered(String.t()) :: t()
   def from_numbered(word) do
@@ -170,6 +180,7 @@ defmodule Pinyin do
 
       iex> Pinyin.read("Ni3hao3!")
       {:ok, [%Pinyin{tone: 3, word: "Ni"}, %Pinyin{tone: 3, word: "hao"}, "!"]}
+
       iex> Pinyin.read("Ni3hao3, hello!")
       {:error, "hello!"}
 
@@ -191,22 +202,28 @@ defmodule Pinyin do
 
       iex> Pinyin.read("Ni3hao3!", :exclusive)
       {:ok, [%Pinyin{tone: 3, word: "Ni"}, %Pinyin{tone: 3, word: "hao"}, "!"]}
+
       iex> Pinyin.read("Ni3hao3, hello!", :exclusive)
       {:error, "hello!"}
+
       iex> Pinyin.read("Ni3好hao3, hello!", :exclusive)
       {:error, "Ni3好hao3, hello!"}
 
       iex> Pinyin.read("Ni3hao3!", :words)
       {:ok, [%Pinyin{tone: 3, word: "Ni"}, %Pinyin{tone: 3, word: "hao"}, "!"]}
+
       iex> Pinyin.read("Ni3hao3, hello!", :words)
       {:ok, [%Pinyin{tone: 3, word: "Ni"}, %Pinyin{tone: 3, word: "hao"}, ", ", "hello", "!"]}
+
       iex> Pinyin.read("Ni3好hao3, hello!", :words)
       {:ok, ["Ni3好hao3",  ", ", "hello", "!"]}
 
       iex> Pinyin.read("Ni3hao3!", :mixed)
       {:ok, [%Pinyin{tone: 3, word: "Ni"}, %Pinyin{tone: 3, word: "hao"}, "!"]}
+
       iex> Pinyin.read("Ni3hao3, hello!", :mixed)
       {:ok, [%Pinyin{tone: 3, word: "Ni"}, %Pinyin{tone: 3, word: "hao"}, ", ", %Pinyin{word: "he"}, "l", %Pinyin{word: "lo"}, "!"]}
+
       iex> Pinyin.read("Ni3好hao3, hello!", :mixed)
       {:ok, [%Pinyin{tone: 3, word: "Ni"}, "好",  %Pinyin{tone: 3, word: "hao"}, ", ", %Pinyin{word: "he"}, "l", %Pinyin{word: "lo"}, "!"]}
 
@@ -222,8 +239,10 @@ defmodule Pinyin do
 
       iex> Pinyin.read("Hao3")
       {:ok, [%Pinyin{tone: 3, word: "Hao"}]}
+
       iex> Pinyin.read("HAO3")
       {:ok, [%Pinyin{tone: 3, word: "HAO"}]}
+
       iex> Pinyin.read("HaO3")
       {:error, "HaO3"}
 
@@ -232,6 +251,7 @@ defmodule Pinyin do
 
       iex> Pinyin.read("zher")
       {:error, "zher"}
+
       iex> Pinyin.read("zheer")
       {:ok, [%Pinyin{word: "zhe"}, %Pinyin{word: "er"}]}
 
@@ -259,10 +279,13 @@ defmodule Pinyin do
 
       iex> Pinyin.read!("ni3hao3")
       [%Pinyin{tone: 3, word: "ni"}, %Pinyin{tone: 3, word: "hao"}]
+
       iex> Pinyin.read!("ni3 hao3")
       [%Pinyin{tone: 3, word: "ni"}, " ", %Pinyin{tone: 3, word: "hao"}]
+
       iex> Pinyin.read!("ni 3")
       ** (Pinyin.ParseError) Error occurred when attempting to parse: `3`
+
   """
   @spec read!(String.t(), :exclusive | :words | :mixed) ::
           pinyin_list() | no_return()
@@ -288,10 +311,13 @@ defmodule Pinyin do
 
       iex> ~p/ni3/
       [%Pinyin{tone: 3, word: "ni"}]
+
       iex> ~p/ni3 hello/w
       [%Pinyin{tone: 3, word: "ni"}, " ", "hello"]
+
       iex> ~p/ni3好/m
       [%Pinyin{tone: 3, word: "ni"}, "好"]
+
       iex> ~p/ni3/s
       %Pinyin{tone: 3, word: "ni"}
 
@@ -335,14 +361,19 @@ defmodule Pinyin do
 
       iex> numbered(~p/nǐ/s)
       "ni3"
+
       iex> numbered(~p/lüè/s)
       "lve4"
+
       iex> numbered(~p/nǐhǎo/)
       "ni3hao3"
+
       iex> numbered(~p/NǏHǍO/)
       "NI3HAO3"
+
       iex> numbered(~p/Nǐhǎo, how are you?/w)
       "Ni3hao3, how are you?"
+
   """
   @spec numbered(t() | pinyin_list()) :: String.t()
   def numbered(%Pinyin{word: w, tone: 0}), do: w
@@ -367,14 +398,19 @@ defmodule Pinyin do
 
       iex> marked(~p/ni3/s)
       "nǐ"
+
       iex> marked(~p/lve4/s)
       "lüè"
+
       iex> marked(~p/ni3hao3/)
       "nǐhǎo"
+
       iex> marked(~p/NI3HAO3/)
       "NǏHǍO"
+
       iex> marked(~p/Ni3hao3, how are you?/w)
       "Nǐhǎo, how are you?"
+
   """
   @spec marked(t() | pinyin_list()) :: String.t()
   def marked(%Pinyin{word: w, tone: t}) do

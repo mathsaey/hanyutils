@@ -81,10 +81,13 @@ defmodule Hanzi do
 
       iex> Hanzi.from_character("你")
       %Hanzi{char: "你", pron: %Pinyin{word: "ni", tone: 3}, pron_tw: nil, alt: []}
+
       iex> Hanzi.from_character("x")
       nil
+
       iex> Hanzi.from_character("你好")
       nil
+
   """
   @spec from_character(String.t()) :: t() | nil
   def from_character(character), do: Hanzi.Map.lookup(character)
@@ -96,10 +99,13 @@ defmodule Hanzi do
 
       iex> Hanzi.character?("你")
       true
+
       iex> Hanzi.character?("x")
       false
+
       iex> Hanzi.character?("你好")
       false
+
   """
   @spec character?(String.t()) :: boolean()
   def character?(character) do
@@ -120,16 +126,22 @@ defmodule Hanzi do
 
       iex> Hanzi.common_pronunciation(~h/你/s)
       [%Pinyin{word: "ni", tone: 3}]
+
       iex> Hanzi.common_pronunciation(~h/你/s, :cn)
       [%Pinyin{word: "ni", tone: 3}]
+
       iex> Hanzi.common_pronunciation(~h/你/s, :tw)
       [%Pinyin{word: "ni", tone: 3}]
+
       iex> Hanzi.common_pronunciation(~h/万/s)
       [%Pinyin{word: "wan", tone: 4}]
+
       iex> Hanzi.common_pronunciation(~h/万/s, :cn)
       [%Pinyin{word: "wan", tone: 4}]
+
       iex> Hanzi.common_pronunciation(~h/万/s, :tw)
       [%Pinyin{word: "mo", tone: 4}]
+
   """
   @spec common_pronunciation(t(), :cn | :tw) :: Pinyin.pinyin_list()
   def common_pronunciation(hanzi, loc \\ :cn)
@@ -149,10 +161,13 @@ defmodule Hanzi do
 
       iex> Hanzi.all_pronunciations(~h/你/s)
       [%Pinyin{word: "ni", tone: 3}]
+
       iex> Hanzi.all_pronunciations(~h/㓎/s)
       ["[ ", %Pinyin{word: "qin", tone: 1}, " | ", %Pinyin{word: "qin", tone: 4}, " | ", %Pinyin{word: "qin", tone: 3}, " ]"]
+
       iex> Hanzi.all_pronunciations(~h/㓎/s, "", "", "")
       ["", %Pinyin{word: "qin", tone: 1}, "", %Pinyin{word: "qin", tone: 4}, "", %Pinyin{word: "qin", tone: 3}, ""]
+
   """
   @spec all_pronunciations(t(), String.t(), String.t(), String.t()) :: Pinyin.pinyin_list()
   def all_pronunciations(hanzi, left \\ "[ ", mid \\ " | ", right \\ " ]")
@@ -173,10 +188,13 @@ defmodule Hanzi do
 
       iex> Hanzi.list_pronunciations(~h/你/s)
       [%Pinyin{word: "ni", tone: 3}]
+
       iex> Hanzi.list_pronunciations(~h/㓎/s)
       [%Pinyin{word: "qin", tone: 1}, %Pinyin{word: "qin", tone: 4}, %Pinyin{word: "qin", tone: 3}]
+
       iex> Hanzi.list_pronunciations(~h/㓎/s)
       [%Pinyin{word: "qin", tone: 1}, %Pinyin{word: "qin", tone: 4}, %Pinyin{word: "qin", tone: 3}]
+
   """
   @spec all_pronunciations(t()) :: Pinyin.pinyin_list()
   def list_pronunciations(%Hanzi{pron: p, alt: []}), do: [p]
@@ -200,8 +218,10 @@ defmodule Hanzi do
 
       iex> Hanzi.read("你好")
       [%Hanzi{char: "你", pron: %Pinyin{word: "ni", tone: 3}}, %Hanzi{char: "好", pron: %Pinyin{word: "hao", tone: 3}, alt: [%Pinyin{word: "hao", tone: 3}, %Pinyin{word: "hao", tone: 4}]}]
+
       iex> Hanzi.read("hello, 你")
       ["hello, ", %Hanzi{char: "你", pron: %Pinyin{word: "ni", tone: 3}}]
+
   """
   @spec read(String.t()) :: hanzi_list()
   def read(string) do
@@ -232,10 +252,13 @@ defmodule Hanzi do
 
       iex> ~h/hello, 你/
       ["hello, ", %Hanzi{char: "你", pron: %Pinyin{word: "ni", tone: 3}}]
+
       iex> ~h/你/s
       %Hanzi{char: "你", pron: %Pinyin{word: "ni", tone: 3}}
+
       iex> ~h/你好/s
       nil
+
   """
   defmacro sigil_h({:<<>>, _, [char]}, [?s]) when is_binary(char) do
     hanzi = from_character(char)
@@ -262,12 +285,16 @@ defmodule Hanzi do
 
       iex> Hanzi.characters?(["你", "好"])
       true
+
       iex> Hanzi.characters?(["你", "boo", "好"])
       false
+
       iex> Hanzi.characters?("你好")
       true
+
       iex> Hanzi.characters?("你 好")
       false
+
   """
   @spec characters?(String.t() | [String.t()]) :: boolean()
   def characters?(l) when is_list(l), do: Enum.all?(l, &character?/1)
@@ -289,12 +316,16 @@ defmodule Hanzi do
 
       iex> characters(~h/你好/)
       "你好"
+
       iex> characters(~h/你hello/)
       "你hello"
+
       iex> characters(~h/你好/, ";")
       "你;好"
+
       iex> characters(~h/你hello/, ";")
       "你;hello"
+
   """
   @spec characters(hanzi_list(), String.t()) :: String.t()
   def characters(lst, joiner \\ "") do
@@ -333,14 +364,19 @@ defmodule Hanzi do
 
       iex> to_pinyin(~h/你好/)
       [%Pinyin{word: "ni", tone: 3}, %Pinyin{word: "hao", tone: 3}]
+
       iex> to_pinyin(~h/二万/, &common_pronunciation(&1, :tw))
       [%Pinyin{word: "er", tone: 4}, %Pinyin{word: "mo", tone: 4}]
+
       iex> to_pinyin(~h/你好/, &all_pronunciations/1)
       [%Pinyin{word: "ni", tone: 3}, "[ ", %Pinyin{word: "hao", tone: 3}, " | ", %Pinyin{word: "hao", tone: 4}, " ]"]
+
       iex> to_pinyin(~h/你好/, &all_pronunciations(&1, "", "", ""))
       [%Pinyin{word: "ni", tone: 3}, "", %Pinyin{word: "hao", tone: 3}, "", %Pinyin{word: "hao", tone: 4}, ""]
+
       iex> to_pinyin(~h/你好/, fn %Hanzi{pron: p} -> [p] end)
       [%Pinyin{word: "ni", tone: 3}, %Pinyin{word: "hao", tone: 3}]
+
   """
   @spec to_pinyin(hanzi_list(), (t() -> Pinyin.pinyin_list())) :: Pinyin.pinyin_list()
   def to_pinyin(lst, converter \\ &common_pronunciation/1) do
