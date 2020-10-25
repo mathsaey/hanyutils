@@ -1,10 +1,18 @@
 # Hanyutils
 
-Flexible, modular utilities for dealing with Chinese characters (hanzi) and pinyin.
+[![hex.pm](https://img.shields.io/hexpm/v/hanyutils.svg)](https://hex.pm/packages/hanyutils)
+[![hexdocs.pm](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/hanyutils/api-reference.html)
+[![hex.pm](https://img.shields.io/hexpm/dt/hanyutils.svg)](https://hex.pm/packages/hanyutils)
+[![hex.pm](https://img.shields.io/hexpm/l/hanyutils.svg)](https://hex.pm/packages/hanyutils)
+[![github.com](https://img.shields.io/github/last-commit/mathsaey/hanyutils.svg)](https://github.com/mathsaey/hanyutils/commits/master)
+
+Flexible, modular utilities for dealing with Chinese characters
+([Hanzi](https://en.wikipedia.org/wiki/Chinese_characters])) and
+[Pinyin](https://en.wikipedia.org/wiki/Pinyin).
 
 ## Features
 
-- Convert hanzi to pinyin
+- Convert Chinese characters (Hanzi) to Pinyin
   - Based on the [Unicode Han Database](http://www.unicode.org/reports/tr38/tr38-27.html)
   - Showing only the most common pronunciation
   - Showing the most common pronunciation for Taiwan (if it differs from the
@@ -47,18 +55,25 @@ module:
 ```elixir
 iex> Hanyutils.to_marked_pinyin("你好")
 "nǐhǎo"
+
 iex> Hanyutils.to_numbered_pinyin("你好")
 "ni3hao3"
+
 iex> Hanyutils.characters?("你好")
 true
+
 iex> Hanyutils.mark_pinyin("ni3hao3")
 "nǐhǎo"
+
 iex> Hanyutils.number_pinyin("nǐhǎo")
 "ni3hao3"
 ```
 
 The `Hanyutils` module is built on top of the `Hanzi` and `Pinyin` modules.
-You can use these lower-level modules directly if your use case is not present in `Hanyutils`<sup>[*](#usecasefn)</sup> .
+You can use these lower-level modules directly if your use case is not present in `Hanyutils`.
+
+Feel free to file an issue if you feel like your use case should be covered by the `Hanyutils` module.
+
 As an example, the `to_marked_pinyin` function shown above could be replaced by the following code:
 
 ```elixir
@@ -71,13 +86,10 @@ Alternative versions of this procedure which show all available pronunciations c
 ```elixir
 iex> "重庆" |> Hanzi.read() |> Hanzi.to_pinyin(&Hanzi.all_pronunciations/1) |> Pinyin.marked()
 "[ zhòng | chóng | tóng ]qìng"
+
 iex> "重庆" |> Hanzi.read() |> Hanzi.to_pinyin(&Hanzi.all_pronunciations(&1, "{", ";", "}")) |> Pinyin.marked()
 "{zhòng;chóng;tóng}qìng"
 ```
-
-The documentation for all of these modules can be found at [https://hexdocs.pm/hanyutils](https://hexdocs.pm/hanyutils).
-
-<a name="usecasefn">*</a> Feel free to file an issue if you feel like your use case should be covered by the `Hanyutils` module.
 
 ## License
 

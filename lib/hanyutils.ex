@@ -7,12 +7,16 @@ defmodule Hanyutils do
 
       iex> Hanyutils.to_marked_pinyin("你好")
       "nǐhǎo"
+
       iex> Hanyutils.to_numbered_pinyin("你好")
       "ni3hao3"
+
       iex> Hanyutils.characters?("你好")
       true
+
       iex> Hanyutils.mark_pinyin("ni3hao3")
       "nǐhǎo"
+
       iex> Hanyutils.number_pinyin("nǐhǎo")
       "ni3hao3"
 
@@ -21,14 +25,12 @@ defmodule Hanyutils do
   possible it can be built manually based on the abstractions in these modules. For instance, the
   `to_marked_pinyin` function could be implemented as follows:
 
-  ```
-  def to_marked_pinyin(string) do
-    string
-    |> Hanzi.read()
-    |> Hanzi.to_pinyin()
-    |> Pinyin.marked()
-  end
-  ```
+      def to_marked_pinyin(string) do
+        string
+        |> Hanzi.read()
+        |> Hanzi.to_pinyin()
+        |> Pinyin.marked()
+      end
 
   Please refer to the documentation of the `Hanzi` and `Pinyin` modules for more information.
   """
@@ -44,8 +46,10 @@ defmodule Hanyutils do
 
       iex> Hanyutils.to_marked_pinyin("你好")
       "nǐhǎo"
+
       iex> Hanyutils.to_marked_pinyin("你好", &Hanzi.all_pronunciations/1)
       "nǐ[ hǎo | hào ]"
+
   """
   @spec to_marked_pinyin(String.t(), (Hanzi.t() -> Pinyin.pinyin_list())) :: String.t()
   def to_marked_pinyin(string, converter \\ &Hanzi.common_pronunciation/1) do
@@ -64,8 +68,10 @@ defmodule Hanyutils do
 
       iex> Hanyutils.to_numbered_pinyin("你好")
       "ni3hao3"
+
       iex> Hanyutils.to_numbered_pinyin("你好", &Hanzi.all_pronunciations/1)
       "ni3[ hao3 | hao4 ]"
+
   """
   def to_numbered_pinyin(string, converter \\ &Hanzi.common_pronunciation/1) do
     string
@@ -85,6 +91,7 @@ defmodule Hanyutils do
 
       iex> Hanyutils.mark_pinyin("ni3hǎo")
       "nǐhǎo"
+
   """
   @spec mark_pinyin(String.t()) :: String.t()
   def mark_pinyin(string) do
@@ -105,6 +112,7 @@ defmodule Hanyutils do
 
       iex> Hanyutils.number_pinyin("ni3hǎo")
       "ni3hao3"
+
   """
   @spec number_pinyin(String.t()) :: String.t()
   def number_pinyin(string) do

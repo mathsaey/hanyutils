@@ -1,6 +1,8 @@
 defmodule Hanyutils.MixProject do
   use Mix.Project
 
+  @source_url "https://github.com/mathsaey/hanyutils"
+
   def project do
     [
       app: :hanyutils,
@@ -9,7 +11,7 @@ defmodule Hanyutils.MixProject do
       deps: deps(),
       package: package(),
       description: description(),
-      source_url: "https://github.com/mathsaey/hanyutils"
+      docs: docs()
     ]
   end
 
@@ -22,13 +24,25 @@ defmodule Hanyutils.MixProject do
   end
 
   defp description do
-    "Flexible, modular, utilities for dealing with Chinese characters and pinyin."
+    """
+    Flexible, modular, utilities for dealing with Chinese characters and pinyin.
+    """
+  end
+
+  defp docs do
+    [
+      main: "readme",
+      source_url: @source_url,
+      extras: [
+        "README.md"
+      ]
+    ]
   end
 
   defp package do
     [
       licenses: ["MIT"],
-      links: %{github: "https://github.com/mathsaey/hanyutils"}
+      links: %{GitHub: @source_url}
     ]
   end
 end
