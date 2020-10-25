@@ -196,7 +196,7 @@ defmodule Hanzi do
       [%Pinyin{word: "qin", tone: 1}, %Pinyin{word: "qin", tone: 4}, %Pinyin{word: "qin", tone: 3}]
 
   """
-  @spec all_pronunciations(t()) :: Pinyin.pinyin_list()
+  @spec list_pronunciations(t()) :: Pinyin.pinyin_list()
   def list_pronunciations(%Hanzi{pron: p, alt: []}), do: [p]
   def list_pronunciations(%Hanzi{pron: _, alt: alt}), do: alt
 
