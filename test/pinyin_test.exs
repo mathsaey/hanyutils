@@ -67,4 +67,9 @@ defmodule PinyinTest do
       assert Pinyin.from_marked!("ề") == %Pinyin{tone: 4, initial: "", final: "ê"}
     end
   end
+
+  test "Test mixed" do
+    pinyin = Pinyin.read!("test ㄓㄨni3hao3", :mixed) |> Pinyin.marked()
+    assert pinyin == "test ㄓㄨnǐhǎo"
+  end
 end

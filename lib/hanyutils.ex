@@ -11,6 +11,9 @@ defmodule Hanyutils do
       iex> Hanyutils.to_numbered_pinyin("你好")
       "ni3hao3"
 
+      iex> Hanyutils.to_zhuyin("你好")
+      "ㄋㄧˇㄏㄠˇ"
+
       iex> Hanyutils.characters?("你好")
       true
 
@@ -19,6 +22,21 @@ defmodule Hanyutils do
 
       iex> Hanyutils.number_pinyin("nǐhǎo")
       "ni3hao3"
+
+      iex> Hanyutils.zhuyin_to_numbered("ㄋㄧˇㄏㄠˇ")
+      "ni3hao3"
+
+      iex> Hanyutils.zhuyin_to_marked("ㄋㄧˇㄏㄠˇ")
+      "nǐhǎo"
+
+      iex> Hanyutils.pinyin_to_zhuyin("nǐhǎo")
+      "ㄋㄧˇㄏㄠˇ"
+
+      iex> Hanyutils.pinyin_to_zhuyin("ni3hao3")
+      "ㄋㄧˇㄏㄠˇ"
+
+      iex> Hanyutils.pinyin_to_zhuyin("ni3hǎo")
+      "ㄋㄧˇㄏㄠˇ"
 
   All of these functions are built based on the functionality found in the `Hanzi` and
   `Pinyin` modules. If this module does not contain the required functionality you need, it is
@@ -32,7 +50,7 @@ defmodule Hanyutils do
         |> Pinyin.marked()
       end
 
-  Please refer to the documentation of the `Hanzi` and `Pinyin` modules for more information.
+  Please refer to the documentation of the `Hanzi`, `Pinyin`, and `Zhuyin` modules for more information.
   """
 
   defdelegate characters?(c), to: Hanzi
@@ -57,6 +75,33 @@ defmodule Hanyutils do
     |> Hanzi.read()
     |> Hanzi.to_pinyin(converter)
     |> Pinyin.marked()
+  end
+
+  @doc """
+  Convert a string containing Han characters to Zhuyin.
+
+  For more information about `converter`, please refer to `Hanzi.to_pinyin/2`.
+  Because the Unihan database provides only definitions of pinyin
+  pronounciation we're converting first to pinyin and that to zhuyin.
+
+  ## Examples
+
+      iex> Hanyutils.to_zhuyin("你好")
+      "ㄋㄧˇㄏㄠˇ"
+
+      iex> Hanyutils.to_zhuyin("朱宇辰")
+      "ㄓㄨㄩˇㄔㄣˊ"
+
+      iex> Hanyutils.to_zhuyin("你好", &Hanzi.all_pronunciations/1)
+      "ㄋㄧˇ[ ㄏㄠˇ | ㄏㄠˋ ]"
+
+  """
+  # @spec to_zhuyin(String.t(), (Hanzi.t() -> Pinyin.pinyin_list())) :: String.t()
+  def to_zhuyin(string, converter \\ &Hanzi.common_pronunciation/1) do
+    string
+    |> Hanzi.read()
+    |> Hanzi.to_pinyin(converter)
+    |> Zhuyin.from_pinyin()
   end
 
   @doc """
@@ -118,6 +163,79 @@ defmodule Hanyutils do
   def number_pinyin(string) do
     string
     |> Pinyin.read!(:words)
+    |> Pinyin.numbered()
+  end
+
+  @doc """
+  Convert a string with marked Pinyin to Zhuyin
+
+  Parses the input using `Pinyin.read!/1` (in `:words` mode), and converts the result with
+  `Pinyin.numbered/1`. Please refer to the documentation of `Pinyin.read/2` if you required
+  details on how the input is parsed. It is worth noting that the `Pinyin.read/2` parser is
+  sensitive to the location of the tone marker.
+
+  ## Examples
+
+      iex> Hanyutils.pinyin_to_zhuyin("ni3hǎo")
+      "ㄋㄧˇㄏㄠˇ"
+
+      iex> Hanyutils.pinyin_to_zhuyin("zhu1yu3chen2")
+      "ㄓㄨㄩˇㄔㄣˊ"
+
+  """
+  @spec pinyin_to_zhuyin(String.t()) :: String.t()
+  def pinyin_to_zhuyin(string) do
+    string
+    |> Pinyin.read!(:words)
+    |> Zhuyin.from_pinyin()
+    |> to_string()
+  end
+
+  @doc """
+  Convert a string with Zhuyin to marked Pinyin.
+
+  Parses the input using `Zhuyin.read!/1` (in `:words` mode), and converts the result with
+  `Pinyin.numbered/1`. Please refer to the documentation of `Zhuyin.read/2` if you required
+  details on how the input is parsed.
+
+  ## Examples
+
+      iex> Hanyutils.zhuyin_to_marked("ㄋㄧˇㄏㄠˇ")
+      "nǐhǎo"
+
+      iex> Hanyutils.zhuyin_to_marked("ㄓㄨㄩˇㄔㄣˊ")
+      "zhūyǔchén"
+
+  """
+  @spec zhuyin_to_marked(String.t()) :: String.t()
+  def zhuyin_to_marked(string) do
+    string
+    |> Zhuyin.read!(:words)
+    |> Zhuyin.to_pinyin()
+    |> Pinyin.marked()
+  end
+
+  @doc """
+  Convert a string with Zhuyin to numbered Pinyin.
+
+  Parses the input using `Zhuyin.read!/1` (in `:words` mode), and converts the result with
+  `Pinyin.numbered/1`. Please refer to the documentation of `Zhuyin.read/2` if you required
+  details on how the input is parsed.
+
+  ## Examples
+
+      iex> Hanyutils.zhuyin_to_numbered("ㄋㄧˇㄏㄠˇ")
+      "ni3hao3"
+
+      iex> Hanyutils.zhuyin_to_numbered("ㄓㄨㄩˇㄔㄣˊ")
+      "zhu1yu3chen2"
+
+  """
+  @spec zhuyin_to_numbered(String.t()) :: String.t()
+  def zhuyin_to_numbered(string) do
+    string
+    |> Zhuyin.read!(:words)
+    |> Zhuyin.to_pinyin()
     |> Pinyin.numbered()
   end
 end
