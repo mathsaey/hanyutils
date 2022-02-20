@@ -7,6 +7,24 @@ on:
     branches: [ master ]
 
 jobs:
+  dialyzer:
+    runs-on: ubuntu-latest
+    name: Check type annotations with Dialyzer
+    strategy:
+      matrix:
+        otp: ['24.2']
+        elixir: ['1.13.2']
+    steps:
+      - uses: actions/checkout@v2
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{matrix.otp}}
+          elixir-version: ${{matrix.elixir}}
+      - name: Get Elixir dependencies
+        run: mix deps.get
+      - name: Run dialyzer to check type annotation
+        run: mix dialyzer
+
   test:
     runs-on: ubuntu-latest
     name: Run tests
