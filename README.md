@@ -59,6 +59,9 @@ iex> Hanyutils.to_marked_pinyin("你好")
 iex> Hanyutils.to_numbered_pinyin("你好")
 "ni3hao3"
 
+iex> Hanyutils.to_zhuyin("你好")
+"ㄋㄧˇㄏㄠˇ"
+
 iex> Hanyutils.characters?("你好")
 true
 
@@ -67,9 +70,24 @@ iex> Hanyutils.mark_pinyin("ni3hao3")
 
 iex> Hanyutils.number_pinyin("nǐhǎo")
 "ni3hao3"
+
+iex> Hanyutils.zhuyin_to_numbered("ㄋㄧˇㄏㄠˇ")
+"ni3hao3"
+
+iex> Hanyutils.zhuyin_to_marked("ㄋㄧˇㄏㄠˇ")
+"nǐhǎo"
+
+iex> Hanyutils.pinyin_to_zhuyin("nǐhǎo")
+"ㄋㄧˇㄏㄠˇ"
+
+iex> Hanyutils.pinyin_to_zhuyin("ni3hao3")
+"ㄋㄧˇㄏㄠˇ"
+
+iex> Hanyutils.pinyin_to_zhuyin("ni3hǎo")
+"ㄋㄧˇㄏㄠˇ"
 ```
 
-The `Hanyutils` module is built on top of the `Hanzi` and `Pinyin` modules.
+The `Hanyutils` module is built on top of the `Hanzi`, `Pinyin`, and `Zhuyin` modules.
 You can use these lower-level modules directly if your use case is not present in `Hanyutils`.
 
 Feel free to file an issue if you feel like your use case should be covered by the `Hanyutils` module.
