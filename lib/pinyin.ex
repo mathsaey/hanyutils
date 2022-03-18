@@ -13,7 +13,7 @@ defmodule Pinyin do
   When a string is parsed with `read/2`, it is converted into a list containing strings and
   `t:t/0` structs. These structs encode pinyin syllables. Users of this module generally do not
   need to worry about manipulating these structs directly, but they are exposed for users who want
-  to handle pinyin using custom logic. `create/2`, `from_marked/1` and `from_numbered/1` can be
+  to handle pinyin using custom logic. `create/2`, `from_marked/1` and `from_numbered/2` can be
   used to directly create a pinyin struct for a given syllable. Like `t:pinyin_list/0`, `t:t/0`
   structs can be converted to strings with `numbered/1` and `marked/1`.
   """
@@ -46,12 +46,12 @@ defmodule Pinyin do
   of the syllable is stored in the `tone` field. `0` represents the neutral tone.
 
   Do not create a pinyin struct manually. Instead, use a function such as `create/2`,
-  `from_marked/1`, `from_numbered/1` or use the `sigil_p/2` sigil.
+  `from_marked/1`, `from_numbered/2` or use the `sigil_p/2` sigil.
   """
-  @type t :: %__MODULE__{tone: 0..4, word: String.t()}
+  @type t :: %__MODULE__{tone: 0..4, initial: String.t(), final: String.t()}
 
-  @enforce_keys [:word]
-  defstruct tone: 0, word: ""
+  @enforce_keys [:final]
+  defstruct tone: 0, initial: "", final: ""
 
   @typedoc """
   List of pinyin syllables mixed with plain strings.
@@ -71,23 +71,23 @@ defmodule Pinyin do
 
   ## Examples
 
-      iex> Pinyin.create("ni", 3)
-      %Pinyin{tone: 3, word: "ni"}
+      iex> Pinyin.create("n", "i", 3)
+      %Pinyin{tone: 3, initial: "n", final: "i"}
 
-      iex> Pinyin.create("lüe", 4)
-      %Pinyin{tone: 4, word: "lve"}
+      iex> Pinyin.create("l", "üe", 4)
+      %Pinyin{tone: 4, initial: "l", final: "ve"}
 
-      iex> Pinyin.create("lve", 4)
-      %Pinyin{tone: 4, word: "lve"}
+      iex> Pinyin.create("l", "ve", 4)
+      %Pinyin{tone: 4, initial: "l", final: "ve"}
 
-      iex> Pinyin.create("ni", 5)
-      ** (FunctionClauseError) no function clause matching in Pinyin.create/2
+      iex> Pinyin.create("n", "i", 5)
+      ** (FunctionClauseError) no function clause matching in Pinyin.create/3
 
   """
-  @spec create(String.t(), 0..4) :: t()
-  def create(word, tone \\ 0) when tone in 0..4 do
-    word = String.replace(word, "ü", "v")
-    %__MODULE__{word: word, tone: tone}
+  @spec create(String.t(), String.t(), 0..4) :: t()
+  def create(initial, final, tone \\ 0) when tone in 0..4 do
+    final = String.replace(final, "ü", "v")
+    %Pinyin{initial: initial, final: final, tone: tone}
   end
 
   @doc """
@@ -100,28 +100,60 @@ defmodule Pinyin do
   ## Examples
 
       iex> Pinyin.from_marked("nǐ")
-      %Pinyin{tone: 3, word: "ni"}
+      %Pinyin{tone: 3, final: "i", initial: "n"}
 
       iex> Pinyin.from_marked("nǐ")
-      %Pinyin{tone: 3, word: "ni"}
+      %Pinyin{tone: 3, final: "i", initial: "n"}
 
       iex> Pinyin.from_marked("nǐhǎo")
       ** (ArgumentError) Multiple tone marks present in 'nǐhǎo'
 
+      iex> Pinyin.from_marked("hello")
+      ** (ArgumentError) No Pinyin word found in 'hello'
+
   """
   @spec from_marked(String.t()) :: t()
   def from_marked(word) do
-    {word, tone} =
-      word
+    {:ok, parsed, _, _, _, _} = Pinyin.Parsers.pinyin_words(word)
+    case parsed do
+      [head = %Pinyin{} | []] -> head
+      [head = %Pinyin{} | _tail] -> raise ArgumentError, "Multiple tone marks present in '#{word}'"
+      _ -> raise ArgumentError, "No Pinyin word found in '#{word}'"
+    end
+  end
+
+  @doc """
+  Create a pinyin struct (`t:t/0`) from an initial string and finalstring, with tone marks.
+
+  When converting the string, the tone marker is stripped and placed in the `tone` field of the
+  resulting struct. An `ArgumentError` is thrown if multiple tone marks are present. Therefore,
+  this function should only be used for a single pinyin word.
+
+  ## Examples
+
+      iex> Pinyin.from_marked("n", "ǐ")
+      %Pinyin{tone: 3, final: "i", initial: "n",}
+
+      iex> Pinyin.from_marked("n", "ǐ")
+      %Pinyin{tone: 3, final: "i", initial: "n"}
+
+      iex> Pinyin.from_marked("n", "ǐhǎo")
+      ** (ArgumentError) Multiple tone marks present in 'n,ǐhǎo'
+
+  """
+  @spec from_marked(String.t(), String.t()) :: t()
+  def from_marked(initial, final) do
+    {final, tone} =
+      final
       |> String.graphemes()
       |> Enum.map(&Pinyin.Char.split/1)
       |> Enum.map_reduce(0, fn
         {char, tone}, 0 -> {char, tone}
         {char, 0}, acc -> {char, acc}
-        _, _ -> raise ArgumentError, "Multiple tone marks present in '#{word}'"
+        _, _ -> raise ArgumentError, "Multiple tone marks present in '#{initial},#{final}'"
       end)
 
-    create(Enum.join(word), tone)
+    create(initial, Enum.join(final), tone)
   end
 
   @doc """
@@ -135,23 +167,23 @@ defmodule Pinyin do
 
   ## Examples
 
-      iex> Pinyin.from_numbered("ni3")
-      %Pinyin{tone: 3, word: "ni"}
+      iex> Pinyin.from_numbered("n", "i3")
+      %Pinyin{tone: 3, initial: "n", final: "i"}
 
-      iex> Pinyin.from_numbered("ni5")
-      %Pinyin{tone: 0, word: "ni5"}
+      iex> Pinyin.from_numbered("n", "i5")
+      %Pinyin{tone: 0, initial: "n", final: "i5"}
 
-      iex> Pinyin.from_numbered("ni")
-      %Pinyin{tone: 0, word: "ni"}
+      iex> Pinyin.from_numbered("n", "i")
+      %Pinyin{tone: 0, initial: "n", final: "i"}
 
   """
-  @spec from_numbered(String.t()) :: t()
-  def from_numbered(word) do
-    if String.ends_with?(word, ~w(1 2 3 4)) do
-      {word, tone} = String.split_at(word, -1)
-      create(word, String.to_integer(tone))
+  @spec from_numbered(String.t(), String.t()) :: t()
+  def from_numbered(initial, final) do
+    if String.ends_with?(final, ~w(1 2 3 4)) do
+      {final, tone} = String.split_at(final, -1)
+      create(initial, final, String.to_integer(tone))
     else
-      create(word)
+      create(initial, final)
     end
   end
 
@@ -179,7 +211,7 @@ defmodule Pinyin do
   and puncutation. Parsing any text that cannot be interpreted as pinyin will result in an error:
 
       iex> Pinyin.read("Ni3hao3!")
-      {:ok, [%Pinyin{tone: 3, word: "Ni"}, %Pinyin{tone: 3, word: "hao"}, "!"]}
+      {:ok, [%Pinyin{tone: 3, initial: "N", final: "i"}, %Pinyin{tone: 3, initial: "h", final: "ao"}, "!"]}
 
       iex> Pinyin.read("Ni3hao3, hello!")
       {:error, "hello!"}
@@ -201,7 +233,7 @@ defmodule Pinyin do
   The following examples show the use of all three modes:
 
       iex> Pinyin.read("Ni3hao3!", :exclusive)
-      {:ok, [%Pinyin{tone: 3, word: "Ni"}, %Pinyin{tone: 3, word: "hao"}, "!"]}
+      {:ok, [%Pinyin{tone: 3, initial: "N", final: "i"}, %Pinyin{tone: 3, initial: "h", final: "ao"}, "!"]}
 
       iex> Pinyin.read("Ni3hao3, hello!", :exclusive)
       {:error, "hello!"}
@@ -210,22 +242,22 @@ defmodule Pinyin do
       {:error, "Ni3好hao3, hello!"}
 
       iex> Pinyin.read("Ni3hao3!", :words)
-      {:ok, [%Pinyin{tone: 3, word: "Ni"}, %Pinyin{tone: 3, word: "hao"}, "!"]}
+      {:ok, [%Pinyin{tone: 3, initial: "N", final: "i"}, %Pinyin{tone: 3, initial: "h", final: "ao"}, "!"]}
 
       iex> Pinyin.read("Ni3hao3, hello!", :words)
-      {:ok, [%Pinyin{tone: 3, word: "Ni"}, %Pinyin{tone: 3, word: "hao"}, ", ", "hello", "!"]}
+      {:ok, [%Pinyin{tone: 3, initial: "N", final: "i"}, %Pinyin{tone: 3, initial: "h", final: "ao"}, ", ", "hello", "!"]}
 
       iex> Pinyin.read("Ni3好hao3, hello!", :words)
       {:ok, ["Ni3好hao3",  ", ", "hello", "!"]}
 
       iex> Pinyin.read("Ni3hao3!", :mixed)
-      {:ok, [%Pinyin{tone: 3, word: "Ni"}, %Pinyin{tone: 3, word: "hao"}, "!"]}
+      {:ok, [%Pinyin{tone: 3, initial: "N", final: "i"}, %Pinyin{tone: 3, initial: "h", final: "ao"}, "!"]}
 
       iex> Pinyin.read("Ni3hao3, hello!", :mixed)
-      {:ok, [%Pinyin{tone: 3, word: "Ni"}, %Pinyin{tone: 3, word: "hao"}, ", ", %Pinyin{word: "he"}, "l", %Pinyin{word: "lo"}, "!"]}
+      {:ok, [%Pinyin{tone: 3, initial: "N", final: "i"}, %Pinyin{tone: 3, initial: "h", final: "ao"}, ", ", %Pinyin{initial: "h", final: "e"}, "l", %Pinyin{initial: "l", final: "o"}, "!"]}
 
       iex> Pinyin.read("Ni3好hao3, hello!", :mixed)
-      {:ok, [%Pinyin{tone: 3, word: "Ni"}, "好",  %Pinyin{tone: 3, word: "hao"}, ", ", %Pinyin{word: "he"}, "l", %Pinyin{word: "lo"}, "!"]}
+      {:ok, [%Pinyin{tone: 3, initial: "N", final: "i"}, "好",  %Pinyin{tone: 3, initial: "h", final: "ao"}, ", ", %Pinyin{initial: "h", final: "e"}, "l", %Pinyin{initial: "l", final: "o"}, "!"]}
 
   When `:mixed` or `:word` mode is used, it is possible some words are incorrectly identified as
   pinyin. This is generally not a problem for users who just wish to use `marked/1` or
@@ -238,13 +270,13 @@ defmodule Pinyin do
   are not recognized:
 
       iex> Pinyin.read("Hao3")
-      {:ok, [%Pinyin{tone: 3, word: "Hao"}]}
+      {:ok, [%Pinyin{tone: 3, initial: "H", final: "ao"}]}
 
       iex> Pinyin.read("HAO3")
-      {:ok, [%Pinyin{tone: 3, word: "HAO"}]}
+      {:ok, [%Pinyin{tone: 3, initial: "H", final: "AO"}]}
 
       iex> Pinyin.read("HaO3")
-      {:error, "HaO3"}
+      {:ok, [%Pinyin{tone: 0, initial: "H", final: "a"}, %Pinyin{tone: 3, initial: "", final: "O"}]}
 
   Finally, this function does not detect the _-r_ suffix. Users of the library should take care to
   fully write out _er_ instead. That is, do not write "zher", use "zheer" instead.
@@ -253,7 +285,7 @@ defmodule Pinyin do
       {:error, "zher"}
 
       iex> Pinyin.read("zheer")
-      {:ok, [%Pinyin{word: "zhe"}, %Pinyin{word: "er"}]}
+      {:ok, [%Pinyin{initial: "zh", final: "e"}, %Pinyin{initial: "", final: "er"}]}
 
   """
   @spec read(String.t(), :exclusive | :words | :mixed) ::
@@ -278,10 +310,10 @@ defmodule Pinyin do
   ## Examples
 
       iex> Pinyin.read!("ni3hao3")
-      [%Pinyin{tone: 3, word: "ni"}, %Pinyin{tone: 3, word: "hao"}]
+      [%Pinyin{tone: 3, final: "i", initial: "n"}, %Pinyin{tone: 3, final: "ao", initial: "h"}]
 
       iex> Pinyin.read!("ni3 hao3")
-      [%Pinyin{tone: 3, word: "ni"}, " ", %Pinyin{tone: 3, word: "hao"}]
+      [%Pinyin{tone: 3, final: "i", initial: "n"}, " ", %Pinyin{tone: 3, final: "ao", initial: "h"}]
 
       iex> Pinyin.read!("ni 3")
       ** (Pinyin.ParseError) Error occurred when attempting to parse: `3`
@@ -310,16 +342,16 @@ defmodule Pinyin do
   ## Examples
 
       iex> ~p/ni3/
-      [%Pinyin{tone: 3, word: "ni"}]
+      [%Pinyin{tone: 3, initial: "n", final: "i"}]
 
       iex> ~p/ni3 hello/w
-      [%Pinyin{tone: 3, word: "ni"}, " ", "hello"]
+      [%Pinyin{tone: 3, initial: "n", final: "i"}, " ", "hello"]
 
       iex> ~p/ni3好/m
-      [%Pinyin{tone: 3, word: "ni"}, "好"]
+      [%Pinyin{tone: 3, initial: "n", final: "i"}, "好"]
 
       iex> ~p/ni3/s
-      %Pinyin{tone: 3, word: "ni"}
+      %Pinyin{tone: 3, initial: "n", final: "i"}
 
   """
   defmacro sigil_p({:<<>>, _, [word]}, [?s]) when is_binary(word) do
@@ -376,8 +408,8 @@ defmodule Pinyin do
 
   """
   @spec numbered(t() | pinyin_list()) :: String.t()
-  def numbered(%Pinyin{word: w, tone: 0}), do: w
-  def numbered(%Pinyin{word: w, tone: t}), do: w <> to_string(t)
+  def numbered(%Pinyin{initial: i, final: f, tone: 0}), do: i <> f
+  def numbered(%Pinyin{initial: i, final: f, tone: t}), do: i <> f <> to_string(t)
 
   def numbered(list) when is_list(list) do
     list
@@ -413,11 +445,11 @@ defmodule Pinyin do
 
   """
   @spec marked(t() | pinyin_list()) :: String.t()
-  def marked(%Pinyin{word: w, tone: t}) do
-    word = String.replace(w, "v", "ü")
-    vowel = word |> String.codepoints() |> Enum.reduce(nil, &select_max/2)
+  def marked(%Pinyin{initial: i, final: f, tone: t}) do
+    final = String.replace(f, "v", "ü")
+    vowel = final |> String.codepoints() |> Enum.reduce(nil, &select_max/2)
 
-    String.replace(word, vowel, Pinyin.Char.with_tone(vowel, t))
+    i <> String.replace(final, vowel, Pinyin.Char.with_tone(vowel, t))
   end
 
   def marked(list) when is_list(list) do

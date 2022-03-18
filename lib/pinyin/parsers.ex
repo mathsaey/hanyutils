@@ -11,27 +11,27 @@ defmodule Pinyin.Parsers do
   defp char_to_integer(c), do: [c] |> to_string() |> String.to_integer()
 
   defp numbered_to_pinyin([initial, final, tone]) do
-    Pinyin.create(initial <> final, tone)
+    Pinyin.create(initial, final, tone)
   end
 
   defp numbered_to_pinyin([final, tone]) when is_integer(tone) do
-    Pinyin.create(final, tone)
+    Pinyin.create("", final, tone)
   end
 
   defp numbered_to_pinyin([initial, final]) when is_binary(final) do
-    Pinyin.create(initial <> final)
+    Pinyin.create(initial, final)
   end
 
   defp numbered_to_pinyin([final]) when is_binary(final) do
-    Pinyin.create(final)
+    Pinyin.create("", final)
   end
 
   defp marked_to_pinyin([initial, final]) do
-    Pinyin.from_marked(initial <> final)
+    Pinyin.from_marked(initial, final)
   end
 
   defp marked_to_pinyin([final]) do
-    Pinyin.from_marked(final)
+    Pinyin.from_marked("", final)
   end
 
   # --------- #
@@ -65,11 +65,12 @@ defmodule Pinyin.Parsers do
       |> reduce({Kernel, :to_string, []})
     end
 
-    def mark_all(list) do
+    @spec mark_all_finals([String.t()]) :: [Pinyin.t()]
+    def mark_all_finals(list) do
       Enum.reduce(1..4, [], fn tone, res ->
         list
         |> Enum.reject(&(&1 in ["v", "ve", "vn", "van"]))
-        |> Enum.map(&Pinyin.marked(%Pinyin{word: &1, tone: tone}))
+        |> Enum.map(&Pinyin.marked(%Pinyin{initial: "", final: &1, tone: tone}))
         |> Enum.concat(res)
       end)
     end
@@ -161,8 +162,8 @@ defmodule Pinyin.Parsers do
     er
   ) |> Enum.sort(&(String.length(&1) >= String.length(&2)))
 
-  marked_combination_finals = Utils.mark_all(combination_finals)
-  marked_standalone_finals = Utils.mark_all(standalone_finals)
+  marked_combination_finals = Utils.mark_all_finals(combination_finals)
+  marked_standalone_finals = Utils.mark_all_finals(standalone_finals)
 
   # Parsers
   # -------
