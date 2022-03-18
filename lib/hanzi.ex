@@ -80,7 +80,7 @@ defmodule Hanzi do
   ## Examples
 
       iex> Hanzi.from_character("你")
-      %Hanzi{char: "你", pron: %Pinyin{word: "ni", tone: 3}, pron_tw: nil, alt: []}
+      %Hanzi{char: "你", pron: %Pinyin{initial: "n", final: "i", tone: 3}, pron_tw: nil, alt: []}
 
       iex> Hanzi.from_character("x")
       nil
@@ -125,22 +125,22 @@ defmodule Hanzi do
   ## Examples
 
       iex> Hanzi.common_pronunciation(~h/你/s)
-      [%Pinyin{word: "ni", tone: 3}]
+      [%Pinyin{initial: "n", final: "i", tone: 3}]
 
       iex> Hanzi.common_pronunciation(~h/你/s, :cn)
-      [%Pinyin{word: "ni", tone: 3}]
+      [%Pinyin{initial: "n", final: "i", tone: 3}]
 
       iex> Hanzi.common_pronunciation(~h/你/s, :tw)
-      [%Pinyin{word: "ni", tone: 3}]
+      [%Pinyin{initial: "n", final: "i", tone: 3}]
 
       iex> Hanzi.common_pronunciation(~h/万/s)
-      [%Pinyin{word: "wan", tone: 4}]
+      [%Pinyin{initial: "", final: "wan", tone: 4}]
 
       iex> Hanzi.common_pronunciation(~h/万/s, :cn)
-      [%Pinyin{word: "wan", tone: 4}]
+      [%Pinyin{initial: "", final: "wan", tone: 4}]
 
       iex> Hanzi.common_pronunciation(~h/万/s, :tw)
-      [%Pinyin{word: "mo", tone: 4}]
+      [%Pinyin{initial: "m", final: "o", tone: 4}]
 
   """
   @spec common_pronunciation(t(), :cn | :tw) :: Pinyin.pinyin_list()
@@ -160,13 +160,13 @@ defmodule Hanzi do
   ## Examples
 
       iex> Hanzi.all_pronunciations(~h/你/s)
-      [%Pinyin{word: "ni", tone: 3}]
+      [%Pinyin{initial: "n", final: "i", tone: 3}]
 
       iex> Hanzi.all_pronunciations(~h/㓎/s)
-      ["[ ", %Pinyin{word: "qin", tone: 1}, " | ", %Pinyin{word: "qin", tone: 4}, " | ", %Pinyin{word: "qin", tone: 3}, " ]"]
+      ["[ ", %Pinyin{initial: "q", final: "in", tone: 1}, " | ", %Pinyin{initial: "q", final: "in", tone: 4}, " | ", %Pinyin{initial: "q", final: "in", tone: 3}, " ]"]
 
       iex> Hanzi.all_pronunciations(~h/㓎/s, "", "", "")
-      ["", %Pinyin{word: "qin", tone: 1}, "", %Pinyin{word: "qin", tone: 4}, "", %Pinyin{word: "qin", tone: 3}, ""]
+      ["", %Pinyin{initial: "q", final: "in", tone: 1}, "", %Pinyin{initial: "q", final: "in", tone: 4}, "", %Pinyin{initial: "q", final: "in", tone: 3}, ""]
 
   """
   @spec all_pronunciations(t(), String.t(), String.t(), String.t()) :: Pinyin.pinyin_list()
@@ -187,13 +187,13 @@ defmodule Hanzi do
   ## Examples
 
       iex> Hanzi.list_pronunciations(~h/你/s)
-      [%Pinyin{word: "ni", tone: 3}]
+      [%Pinyin{initial: "n", final: "i", tone: 3}]
 
       iex> Hanzi.list_pronunciations(~h/㓎/s)
-      [%Pinyin{word: "qin", tone: 1}, %Pinyin{word: "qin", tone: 4}, %Pinyin{word: "qin", tone: 3}]
+      [%Pinyin{initial: "q", final: "in", tone: 1}, %Pinyin{initial: "q", final: "in", tone: 4}, %Pinyin{initial: "q", final: "in", tone: 3}]
 
       iex> Hanzi.list_pronunciations(~h/㓎/s)
-      [%Pinyin{word: "qin", tone: 1}, %Pinyin{word: "qin", tone: 4}, %Pinyin{word: "qin", tone: 3}]
+      [%Pinyin{initial: "q", final: "in", tone: 1}, %Pinyin{initial: "q", final: "in", tone: 4}, %Pinyin{initial: "q", final: "in", tone: 3}]
 
   """
   @spec list_pronunciations(t()) :: Pinyin.pinyin_list()
@@ -217,10 +217,10 @@ defmodule Hanzi do
   ## Examples
 
       iex> Hanzi.read("你好")
-      [%Hanzi{char: "你", pron: %Pinyin{word: "ni", tone: 3}}, %Hanzi{char: "好", pron: %Pinyin{word: "hao", tone: 3}, alt: [%Pinyin{word: "hao", tone: 3}, %Pinyin{word: "hao", tone: 4}]}]
+      [%Hanzi{char: "你", pron: %Pinyin{initial: "n", final: "i", tone: 3}}, %Hanzi{char: "好", pron: %Pinyin{initial: "h", final: "ao", tone: 3}, alt: [%Pinyin{initial: "h", final: "ao", tone: 3}, %Pinyin{initial: "h", final: "ao", tone: 4}]}]
 
       iex> Hanzi.read("hello, 你")
-      ["hello, ", %Hanzi{char: "你", pron: %Pinyin{word: "ni", tone: 3}}]
+      ["hello, ", %Hanzi{char: "你", pron: %Pinyin{initial: "n", final: "i", tone: 3}}]
 
   """
   @spec read(String.t()) :: hanzi_list()
@@ -251,10 +251,10 @@ defmodule Hanzi do
   ## Examples
 
       iex> ~h/hello, 你/
-      ["hello, ", %Hanzi{char: "你", pron: %Pinyin{word: "ni", tone: 3}}]
+      ["hello, ", %Hanzi{char: "你", pron: %Pinyin{initial: "n", final: "i", tone: 3}}]
 
       iex> ~h/你/s
-      %Hanzi{char: "你", pron: %Pinyin{word: "ni", tone: 3}}
+      %Hanzi{char: "你", pron: %Pinyin{initial: "n", final: "i", tone: 3}}
 
       iex> ~h/你好/s
       nil
@@ -363,19 +363,19 @@ defmodule Hanzi do
   ## Examples
 
       iex> to_pinyin(~h/你好/)
-      [%Pinyin{word: "ni", tone: 3}, %Pinyin{word: "hao", tone: 3}]
+      [%Pinyin{initial: "n", final: "i", tone: 3}, %Pinyin{initial: "h", final: "ao", tone: 3}]
 
       iex> to_pinyin(~h/二万/, &common_pronunciation(&1, :tw))
-      [%Pinyin{word: "er", tone: 4}, %Pinyin{word: "mo", tone: 4}]
+      [%Pinyin{initial: "", final: "er", tone: 4}, %Pinyin{initial: "m", final: "o", tone: 4}]
 
       iex> to_pinyin(~h/你好/, &all_pronunciations/1)
-      [%Pinyin{word: "ni", tone: 3}, "[ ", %Pinyin{word: "hao", tone: 3}, " | ", %Pinyin{word: "hao", tone: 4}, " ]"]
+      [%Pinyin{initial: "n", final: "i", tone: 3}, "[ ", %Pinyin{initial: "h", final: "ao", tone: 3}, " | ", %Pinyin{initial: "h", final: "ao", tone: 4}, " ]"]
 
       iex> to_pinyin(~h/你好/, &all_pronunciations(&1, "", "", ""))
-      [%Pinyin{word: "ni", tone: 3}, "", %Pinyin{word: "hao", tone: 3}, "", %Pinyin{word: "hao", tone: 4}, ""]
+      [%Pinyin{initial: "n", final: "i", tone: 3}, "", %Pinyin{initial: "h", final: "ao", tone: 3}, "", %Pinyin{initial: "h", final: "ao", tone: 4}, ""]
 
       iex> to_pinyin(~h/你好/, fn %Hanzi{pron: p} -> [p] end)
-      [%Pinyin{word: "ni", tone: 3}, %Pinyin{word: "hao", tone: 3}]
+      [%Pinyin{initial: "n", final: "i", tone: 3}, %Pinyin{initial: "h", final: "ao", tone: 3}]
 
   """
   @spec to_pinyin(hanzi_list(), (t() -> Pinyin.pinyin_list())) :: Pinyin.pinyin_list()
