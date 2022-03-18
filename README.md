@@ -7,7 +7,7 @@
 [![github.com](https://img.shields.io/github/last-commit/mathsaey/hanyutils.svg)](https://github.com/mathsaey/hanyutils/commits/master)
 
 Flexible, modular utilities for dealing with Chinese characters
-([Hanzi](https://en.wikipedia.org/wiki/Chinese_characters])) and
+([Hanzi](https://en.wikipedia.org/wiki/Chinese_characters)) and
 [Pinyin](https://en.wikipedia.org/wiki/Pinyin).
 
 ## Features
