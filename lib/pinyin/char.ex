@@ -9,7 +9,9 @@ defmodule Pinyin.Char do
     "o" => ~w(ō ó ǒ ò),
     "u" => ~w(ū ú ǔ ù),
     "ü" => ~w(ǖ ǘ ǚ ǜ),
-    "v" => ~w(ǖ ǘ ǚ ǜ)
+    "v" => ~w(ǖ ǘ ǚ ǜ),
+    # Be careful when selecting these. Some editors (e.g. VS Code has problems selecting these characters as single characters)
+    "ê" => ~w(ê̄ ế ê̌ ề)
   }
 
   upper_tone_map =

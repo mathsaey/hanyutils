@@ -158,9 +158,14 @@ defmodule Pinyin.Parsers do
   standalone_finals = ~w(
          e    a  ei  ai  ou  ao  en   an       eng  ang
     yi  ye   ya         you yao yin  yan yong ying yang
-    wu  wo o wa wei wai         wen  wan      weng wang
+    wu  wo o wa wei wai         wen  wan wong weng wang
     yu yue                    yun yuan
     er
+    hng
+    ê
+    hm
+    yo
+    ng
   ) |> Enum.sort(&(String.length(&1) >= String.length(&2)))
 
   marked_combination_finals = Utils.mark_all_finals(combination_finals)
