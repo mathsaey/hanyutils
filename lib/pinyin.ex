@@ -100,10 +100,10 @@ defmodule Pinyin do
   ## Examples
 
       iex> Pinyin.from_marked("nǐ")
-      %Pinyin{tone: 3, final: "i", initial: "n"}
+      %Pinyin{tone: 3, initial: "n", final: "i"}
 
       iex> Pinyin.from_marked("nǐ")
-      %Pinyin{tone: 3, final: "i", initial: "n"}
+      %Pinyin{tone: 3, initial: "n", final: "i"}
 
       iex> Pinyin.from_marked("nǐhǎo")
       ** (ArgumentError) Multiple tone marks present in 'nǐhǎo'
@@ -138,10 +138,10 @@ defmodule Pinyin do
   ## Examples
 
       iex> Pinyin.from_marked("n", "ǐ")
-      %Pinyin{tone: 3, final: "i", initial: "n",}
+      %Pinyin{tone: 3, initial: "n",, final: "i"}
 
       iex> Pinyin.from_marked("n", "ǐ")
-      %Pinyin{tone: 3, final: "i", initial: "n"}
+      %Pinyin{tone: 3, initial: "n", final: "i"}
 
       iex> Pinyin.from_marked("n", "ǐhǎo")
       ** (ArgumentError) Multiple tone marks present in 'n,ǐhǎo'
@@ -316,10 +316,10 @@ defmodule Pinyin do
   ## Examples
 
       iex> Pinyin.read!("ni3hao3")
-      [%Pinyin{tone: 3, final: "i", initial: "n"}, %Pinyin{tone: 3, final: "ao", initial: "h"}]
+      [%Pinyin{tone: 3, initial: "n", final: "i"}, %Pinyin{tone: 3, initial: "h", final: "ao"}]
 
       iex> Pinyin.read!("ni3 hao3")
-      [%Pinyin{tone: 3, final: "i", initial: "n"}, " ", %Pinyin{tone: 3, final: "ao", initial: "h"}]
+      [%Pinyin{tone: 3, initial: "n", final: "i"}, " ", %Pinyin{tone: 3, initial: "h", final: "ao"}]
 
       iex> Pinyin.read!("ni 3")
       ** (Pinyin.ParseError) Error occurred when attempting to parse: `3`
