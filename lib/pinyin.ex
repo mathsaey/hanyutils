@@ -275,14 +275,17 @@ defmodule Pinyin do
   "Ni3hao3", "NI3HAO3" and "NI3hao3" are accepted. However, pinyin words with mixed capitalization
   are not recognized:
 
-      iex> Pinyin.read("Hao3")
-      {:ok, [%Pinyin{tone: 3, initial: "H", final: "ao"}]}
+      iex> Pinyin.read("Lei3")
+      {:ok, [%Pinyin{tone: 3, initial: "L", final: "ei"}]}
 
-      iex> Pinyin.read("HAO3")
-      {:ok, [%Pinyin{tone: 3, initial: "H", final: "AO"}]}
+      iex> Pinyin.read("LEI3")
+      {:ok, [%Pinyin{tone: 3, initial: "L", final: "EI"}]}
 
-      iex> Pinyin.read("HaO3")
-      {:ok, [%Pinyin{tone: 0, initial: "H", final: "a"}, %Pinyin{tone: 3, initial: "", final: "O"}]}
+      iex> Pinyin.read("LeI")
+      {:error, "LeI"}
+
+      iex> Pinyin.read("LEi")
+      {:error, "LEi"}
 
   Finally, this function does not detect the _-r_ suffix. Users of the library should take care to
   fully write out _er_ instead. That is, do not write "zher", use "zheer" instead.
