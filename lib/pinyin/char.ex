@@ -10,8 +10,10 @@ defmodule Pinyin.Char do
     "u" => ~w(ū ú ǔ ù),
     "ü" => ~w(ǖ ǘ ǚ ǜ),
     "v" => ~w(ǖ ǘ ǚ ǜ),
-    # Be careful when selecting these. Some editors (e.g. VS Code has problems selecting these characters as single characters)
-    "ê" => ~w(ê̄ ế ê̌ ề)
+    # Be careful when selecting these. Some editors (e.g. VS Code) have problems selecting these characters as single characters
+    "ê" => ~w(ê̄ ế ê̌ ề),
+    # N with first tone doesn't exist. Can't put n or split/1 will get confused
+    "n" => ~w(ñ ń ň ǹ)
   }
 
   upper_tone_map =

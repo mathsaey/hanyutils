@@ -12,9 +12,11 @@ defmodule PinyinTest do
   end
 
   test "Uncommon standalone finals with tone marks" do
-    # TODO: Implement ng tone mark
-    # assert Pinyin.from_marked("ňg") == %Pinyin{tone: 3, initial: "", final: "ng"}
-    # assert Pinyin.from_marked("ńg") == %Pinyin{tone: 2, initial: "", final: "ng"}
+    assert Pinyin.from_marked("ng") == %Pinyin{tone: 0, initial: "", final: "ng"}
+    # There's no ng with first tone
+    assert Pinyin.from_marked("ńg") == %Pinyin{tone: 2, initial: "", final: "ng"}
+    assert Pinyin.from_marked("ňg") == %Pinyin{tone: 3, initial: "", final: "ng"}
+    assert Pinyin.from_marked("ǹg") == %Pinyin{tone: 4, initial: "", final: "ng"}
     assert Pinyin.from_marked("ê") == %Pinyin{tone: 0, initial: "", final: "ê"}
     assert Pinyin.from_marked("ê̄") == %Pinyin{tone: 1, initial: "", final: "ê"}
     assert Pinyin.from_marked("ế") == %Pinyin{tone: 2, initial: "", final: "ê"}
