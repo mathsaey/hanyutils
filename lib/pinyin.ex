@@ -138,7 +138,7 @@ defmodule Pinyin do
   ## Examples
 
       iex> Pinyin.from_marked("n", "ǐ")
-      %Pinyin{tone: 3, initial: "n",, final: "i"}
+      %Pinyin{tone: 3, initial: "n", final: "i"}
 
       iex> Pinyin.from_marked("n", "ǐ")
       %Pinyin{tone: 3, initial: "n", final: "i"}
