@@ -458,7 +458,13 @@ defmodule Pinyin do
     final = String.replace(f, "v", "ü")
     vowel = final |> String.codepoints() |> Enum.reduce(nil, &select_max/2)
 
-    i <> String.replace(final, vowel, Pinyin.Char.with_tone(vowel, t))
+    # TODO: Enable this for non-vowels
+    # That will allows us to parse ng with tone mark
+    if vowel == nil do
+      i <> final
+    else
+      i <> String.replace(final, vowel, Pinyin.Char.with_tone(vowel, t))
+    end
   end
 
   def marked(list) when is_list(list) do
@@ -505,8 +511,8 @@ defmodule Pinyin do
   defp select_max("U", "i"), do: "U"
 
   # If none of the above match whichever vowel is present takes the mark
-  defp select_max(v, _) when v in ["a", "e", "i", "o", "u", "ü", "v"], do: v
-  defp select_max(v, _) when v in ["A", "E", "I", "O", "U", "Ü", "v"], do: v
+  defp select_max(v, _) when v in ["a", "e", "i", "o", "u", "ü", "v", "ê"], do: v
+  defp select_max(v, _) when v in ["A", "E", "I", "O", "U", "Ü", "v", "Ê"], do: v
 
   # If there is no vowel, stay with previous selection
   defp select_max(_, p), do: p
