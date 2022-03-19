@@ -115,10 +115,16 @@ defmodule Pinyin do
   @spec from_marked(String.t()) :: t()
   def from_marked(word) do
     {:ok, parsed, _, _, _, _} = Pinyin.Parsers.pinyin_words(word)
+
     case parsed do
-      [head = %Pinyin{} | []] -> head
-      [head = %Pinyin{} | _tail] -> raise ArgumentError, "Multiple tone marks present in '#{word}'"
-      _ -> raise ArgumentError, "No Pinyin word found in '#{word}'"
+      [head = %Pinyin{} | []] ->
+        head
+
+      [head = %Pinyin{} | _tail] ->
+        raise ArgumentError, "Multiple tone marks present in '#{word}'"
+
+      _ ->
+        raise ArgumentError, "No Pinyin word found in '#{word}'"
     end
   end
 
