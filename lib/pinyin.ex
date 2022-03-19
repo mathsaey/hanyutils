@@ -456,14 +456,20 @@ defmodule Pinyin do
   @spec marked(t() | pinyin_list()) :: String.t()
   def marked(%Pinyin{initial: i, final: f, tone: t}) do
     final = String.replace(f, "v", "ü")
-    vowel = final |> String.codepoints() |> Enum.reduce(nil, &select_max/2)
+    # Special case for ng standlone final
+    vowel =
+      if final == "ng" do
+        "n"
+      else
+        final |> String.codepoints() |> Enum.reduce(nil, &select_max/2)
+      end
 
-    # TODO: Enable this for non-vowels
-    # That will allows us to parse ng with tone mark
     if vowel == nil do
+      # Finals without vowels that can be marked, like hng
       i <> final
     else
-      i <> String.replace(final, vowel, Pinyin.Char.with_tone(vowel, t))
+      replacing = Pinyin.Char.with_tone(vowel, t)
+      i <> String.replace(final, vowel, replacing)
     end
   end
 
