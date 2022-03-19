@@ -149,15 +149,16 @@ defmodule Pinyin.Parsers do
     i  e    a ei  ai ou  ao en  an  ong eng  ang
       ie   ia        iu iao in ian iong ing iang
     u uo o ua ui uai        un uan          uang
-    ü üe ue                 ün üan
+    ü üe                    ün üan
     v ve                    vn van
+      ue
   ) |> Enum.sort(&(String.length(&1) >= String.length(&2)))
 
   # Finals which are used standalone
   standalone_finals = ~w(
-      o  e  a  ei  ai  ou  ao  en   an       eng  ang
-    yi  ye ya         you yao yin  yan yong ying yang
-    wu  wo wa wei wai         wen  wan      weng wang
+         e    a  ei  ai  ou  ao  en   an       eng  ang
+    yi  ye   ya         you yao yin  yan yong ying yang
+    wu  wo o wa wei wai         wen  wan      weng wang
     yu yue                    yun yuan
     er
   ) |> Enum.sort(&(String.length(&1) >= String.length(&2)))
