@@ -54,7 +54,6 @@ defmodule Pinyin do
     def _mark(unquote(char), unquote(idx)), do: unquote(marked)
   end
 
-  def _mark("v", t), do: _mark("ü", t)
   def _mark(c, _), do: c
 
   # ----- #
