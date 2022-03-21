@@ -36,7 +36,44 @@ defmodule PinyinTest do
       assert Pinyin._mark("ü", 4) == "ǜ"
     end
 
+    test "upper case characters" do
+      assert Pinyin._mark("A", 1) == "Ā"
+      assert Pinyin._mark("A", 2) == "Á"
+      assert Pinyin._mark("A", 3) == "Ǎ"
+      assert Pinyin._mark("A", 4) == "À"
+
+      assert Pinyin._mark("E", 1) == "Ē"
+      assert Pinyin._mark("E", 2) == "É"
+      assert Pinyin._mark("E", 3) == "Ě"
+      assert Pinyin._mark("E", 4) == "È"
+
+      assert Pinyin._mark("I", 1) == "Ī"
+      assert Pinyin._mark("I", 2) == "Í"
+      assert Pinyin._mark("I", 3) == "Ǐ"
+      assert Pinyin._mark("I", 4) == "Ì"
+
+      assert Pinyin._mark("O", 1) == "Ō"
+      assert Pinyin._mark("O", 2) == "Ó"
+      assert Pinyin._mark("O", 3) == "Ǒ"
+      assert Pinyin._mark("O", 4) == "Ò"
+
+      assert Pinyin._mark("U", 1) == "Ū"
+      assert Pinyin._mark("U", 2) == "Ú"
+      assert Pinyin._mark("U", 3) == "Ǔ"
+      assert Pinyin._mark("U", 4) == "Ù"
+
+      assert Pinyin._mark("Ü", 1) == "Ǖ"
+      assert Pinyin._mark("Ü", 2) == "Ǘ"
+      assert Pinyin._mark("Ü", 3) == "Ǚ"
+      assert Pinyin._mark("Ü", 4) == "Ǜ"
+    end
+
     test "special cases" do
+      assert Pinyin._mark("ê", 1) == "ê̄"
+      assert Pinyin._mark("ê", 2) == "ế"
+      assert Pinyin._mark("ê", 3) == "ê̌"
+      assert Pinyin._mark("ê", 4) == "ề"
+
       assert Pinyin._mark("n", 1) == "n̄"
       assert Pinyin._mark("n", 2) == "ń"
       assert Pinyin._mark("n", 3) == "ň"
@@ -46,10 +83,33 @@ defmodule PinyinTest do
       assert Pinyin._mark("m", 2) == "ḿ"
       assert Pinyin._mark("m", 3) == "m̌"
       assert Pinyin._mark("m", 4) == "m̀"
+
+      assert Pinyin._mark("Ê", 1) == "Ê̄"
+      assert Pinyin._mark("Ê", 2) == "Ế"
+      assert Pinyin._mark("Ê", 3) == "Ê̌"
+      assert Pinyin._mark("Ê", 4) == "Ề"
+
+      assert Pinyin._mark("N", 1) == "N̄"
+      assert Pinyin._mark("N", 2) == "Ń"
+      assert Pinyin._mark("N", 3) == "Ň"
+      assert Pinyin._mark("N", 4) == "Ǹ"
+
+      assert Pinyin._mark("M", 1) == "M̄"
+      assert Pinyin._mark("M", 2) == "Ḿ"
+      assert Pinyin._mark("M", 3) == "M̌"
+      assert Pinyin._mark("M", 4) == "M̀"
+    end
+
+    test "does not modify other characters" do
+      assert Pinyin._mark("x", 4) == "x"
+    end
+
+    test "neutral tone" do
+      assert Pinyin._mark("a", 0) == "a"
     end
 
     test "results in the shortest possible string" do
-      for char <- ~w(a e i o u ü), idx <- 1..4 do
+      for char <- ~w(a e i o u ü A E I O U Ü), idx <- 1..4 do
         marked = Pinyin._mark(char, idx)
         assert String.codepoints(marked) == String.graphemes(marked)
       end
