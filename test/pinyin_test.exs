@@ -36,13 +36,6 @@ defmodule PinyinTest do
       assert Pinyin._mark("ü", 4) == "ǜ"
     end
 
-    test "v" do
-      assert Pinyin._mark("v", 1) == "ǖ"
-      assert Pinyin._mark("v", 2) == "ǘ"
-      assert Pinyin._mark("v", 3) == "ǚ"
-      assert Pinyin._mark("v", 4) == "ǜ"
-    end
-
     test "special cases" do
       assert Pinyin._mark("n", 1) == "n̄"
       assert Pinyin._mark("n", 2) == "ń"
