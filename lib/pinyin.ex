@@ -476,23 +476,24 @@ defmodule Pinyin do
 
   """
   @spec marked(t() | pinyin_list()) :: String.t()
-  def marked(%Pinyin{initial: i, final: f, tone: t}) do
-    final = String.replace(f, "v", "ü")
-    # Special case for ng standlone final
-    vowel =
-      if final == "ng" do
-        "n"
-      else
-        final |> String.codepoints() |> Enum.reduce(nil, &select_max/2)
-      end
+  def marked(pinyin)
 
-    if vowel == nil do
-      # Finals without vowels that can be marked, like hng
-      i <> final
-    else
-      replacing = _mark(vowel, t)
-      i <> String.replace(final, vowel, replacing)
-    end
+  # Avoid work when there is no tone marker
+  def marked(%Pinyin{initial: i, final: f, tone: 0}), do: i <> replace_v(f)
+
+  # Special cases
+  def marked(%Pinyin{initial: "", final: "ê", tone: t}), do: _mark("ê", t)
+  def marked(%Pinyin{initial: "", final: "Ê", tone: t}), do: _mark("Ê", t)
+  def marked(%Pinyin{initial: "", final: "m", tone: t}), do: _mark("m", t)
+  def marked(%Pinyin{initial: "", final: "M", tone: t}), do: _mark("M", t)
+  def marked(%Pinyin{initial: "", final: <<"n", rem::binary>>, tone: t}), do: _mark("n", t) <> rem
+  def marked(%Pinyin{initial: "", final: <<"N", rem::binary>>, tone: t}), do: _mark("N", t) <> rem
+
+  def marked(%Pinyin{initial: i, final: f, tone: t}) do
+    final = replace_v(f)
+
+    vowel = final |> String.codepoints() |> Enum.reduce(nil, &select_max/2)
+    i <> String.replace(final, vowel, Pinyin.Char.with_tone(vowel, t))
   end
 
   def marked(list) when is_list(list) do
@@ -503,6 +504,8 @@ defmodule Pinyin do
     end)
     |> Enum.join()
   end
+
+  defp replace_v(str), do: String.replace(str, ~w(v V), &if(&1 == "v", do: "ü", else: "Ü"))
 
   # Tone Placement
   # --------------
@@ -539,8 +542,8 @@ defmodule Pinyin do
   defp select_max("U", "i"), do: "U"
 
   # If none of the above match whichever vowel is present takes the mark
-  defp select_max(v, _) when v in ["a", "e", "i", "o", "u", "ü", "v", "ê"], do: v
-  defp select_max(v, _) when v in ["A", "E", "I", "O", "U", "Ü", "v", "Ê"], do: v
+  defp select_max(v, _) when v in ["a", "e", "i", "o", "u", "ü"], do: v
+  defp select_max(v, _) when v in ["A", "E", "I", "O", "U", "Ü"], do: v
 
   # If there is no vowel, stay with previous selection
   defp select_max(_, p), do: p

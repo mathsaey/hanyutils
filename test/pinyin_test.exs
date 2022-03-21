@@ -116,6 +116,49 @@ defmodule PinyinTest do
     end
   end
 
+  describe "mark" do
+    test "standard standalone words" do
+      assert Pinyin.marked(Pinyin.create("h", "uan", 1)) == "huān"
+      assert Pinyin.marked(Pinyin.create("p", "iao", 2)) == "piáo"
+      assert Pinyin.marked(Pinyin.create("p", "eng", 3)) == "pěng"
+      assert Pinyin.marked(Pinyin.create("sh", "uo", 4)) == "shuò"
+      assert Pinyin.marked(Pinyin.create("sh", "ui", 1)) == "shuī"
+      assert Pinyin.marked(Pinyin.create("n", "iu", 2)) == "niú"
+      assert Pinyin.marked(Pinyin.create("sh", "i", 3)) == "shǐ"
+      assert Pinyin.marked(Pinyin.create("l", "ü", 4)) == "lǜ"
+    end
+
+    test "uppercase standalone words" do
+      assert Pinyin.marked(Pinyin.create("H", "UAN", 1)) == "HUĀN"
+      assert Pinyin.marked(Pinyin.create("P", "IAO", 2)) == "PIÁO"
+      assert Pinyin.marked(Pinyin.create("P", "ENG", 3)) == "PĚNG"
+      assert Pinyin.marked(Pinyin.create("SH", "UO", 4)) == "SHUÒ"
+      assert Pinyin.marked(Pinyin.create("SH", "UI", 1)) == "SHUĪ"
+      assert Pinyin.marked(Pinyin.create("N", "IU", 2)) == "NIÚ"
+      assert Pinyin.marked(Pinyin.create("SH", "I", 3)) == "SHǏ"
+      assert Pinyin.marked(Pinyin.create("L", "Ü", 4)) == "LǛ"
+    end
+
+    test "words with v" do
+      assert Pinyin.marked(Pinyin.create("l", "v", 4)) == "lǜ"
+      assert Pinyin.marked(Pinyin.create("l", "ve", 4)) == "lüè"
+      assert Pinyin.marked(Pinyin.create("L", "V", 4)) == "LǛ"
+      assert Pinyin.marked(Pinyin.create("L", "VE", 4)) == "LÜÈ"
+    end
+
+    test "uncommon cases" do
+      assert Pinyin.marked(Pinyin.create("", "m", 1)) == "m̄"
+      assert Pinyin.marked(Pinyin.create("", "n", 2)) == "ń"
+      assert Pinyin.marked(Pinyin.create("", "ng", 3)) == "ňg"
+      assert Pinyin.marked(Pinyin.create("", "ê", 4)) == "ề"
+
+      assert Pinyin.marked(Pinyin.create("", "M", 1)) == "M̄"
+      assert Pinyin.marked(Pinyin.create("", "N", 2)) == "Ń"
+      assert Pinyin.marked(Pinyin.create("", "Ng", 3)) == "Ňg"
+      assert Pinyin.marked(Pinyin.create("", "NG", 3)) == "ŇG"
+      assert Pinyin.marked(Pinyin.create("", "Ê", 4)) == "Ề"
+    end
+  end
 
   test "Uncommon standalone finals" do
     assert Pinyin.from_marked("ng") == %Pinyin{tone: 0, initial: "", final: "ng"}
