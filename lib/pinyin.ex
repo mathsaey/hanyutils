@@ -18,9 +18,6 @@ defmodule Pinyin do
   structs can be converted to strings with `numbered/1` and `marked/1`.
   """
 
-  # Note for developers, a lot of the heavy lifting for the functions in this module is performed
-  # at compile time. The Pinyin.Chars and Pinyin.Parsers modules contain the code to do this.
-
   defmodule ParseError do
     @moduledoc """
     Error that may be raised by `read!/2` or `sigil_p/2`
@@ -33,6 +30,32 @@ defmodule Pinyin do
       %__MODULE__{message: msg}
     end
   end
+
+  # ----------------- #
+  # Compile-time Work #
+  # ----------------- #
+
+  # Characters which can take a tone mark
+  markeable_characters = ~w(a e i o u ü ê n m)
+  markeable_characters = markeable_characters ++ Enum.map(markeable_characters, &String.upcase/1)
+
+  # Unicode combining diacritics which represent the various tone markers
+  tone_diacritic_combiners = [0x0304, 0x0301, 0x030C, 0x0300]
+
+  # Function which can add a tone mark to a character. We generate all valid combinations at
+  # compile time.
+  @spec _mark(String.t(), 0..4) :: String.t()
+  def _mark(char, tone)
+
+  for char <- markeable_characters, {tone, idx} <- Enum.with_index(tone_diacritic_combiners, 1) do
+    # We normalise the string to ensure a compact representation
+    marked = String.normalize(<<char::binary, tone::utf8>>, :nfc)
+
+    def _mark(unquote(char), unquote(idx)), do: unquote(marked)
+  end
+
+  def _mark("v", t), do: _mark("ü", t)
+  def _mark(c, _), do: c
 
   # ----- #
   # Types #
@@ -468,7 +491,7 @@ defmodule Pinyin do
       # Finals without vowels that can be marked, like hng
       i <> final
     else
-      replacing = Pinyin.Char.with_tone(vowel, t)
+      replacing = _mark(vowel, t)
       i <> String.replace(final, vowel, replacing)
     end
   end
