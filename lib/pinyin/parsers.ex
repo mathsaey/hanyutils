@@ -8,7 +8,7 @@ defmodule Pinyin.Parsers do
   # Conversions #
   # ----------- #
 
-  defp char_to_integer(c), do: [c] |> to_string() |> String.to_integer()
+  defp char_to_integer(c), do: c - ?0
 
   defp numbered_to_pinyin([initial, final, tone]) do
     Pinyin.create(initial, final, tone)
