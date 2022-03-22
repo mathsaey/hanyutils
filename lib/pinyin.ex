@@ -326,7 +326,7 @@ defmodule Pinyin do
       case mode do
         :exclusive -> Pinyin.Parsers.pinyin_only(string)
         :words -> Pinyin.Parsers.pinyin_words(string)
-        :mixed -> Pinyin.Parsers.mixed_words(string)
+        :mixed -> Pinyin.Parsers.pinyin_mix(string)
       end
 
     case res do
