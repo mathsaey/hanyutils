@@ -18,19 +18,6 @@ defmodule Pinyin do
   structs can be converted to strings with `numbered/1` and `marked/1`.
   """
 
-  defmodule ParseError do
-    @moduledoc """
-    Error that may be raised by `read!/2` or `sigil_p/2`
-    """
-    defexception [:message]
-
-    @impl true
-    def exception(remainder) do
-      msg = "Error occurred when attempting to parse: `#{remainder}`"
-      %__MODULE__{message: msg}
-    end
-  end
-
   # ----------------- #
   # Compile-time Work #
   # ----------------- #
