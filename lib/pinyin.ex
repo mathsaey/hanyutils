@@ -535,9 +535,9 @@ defmodule Pinyin do
     Macro.escape(read!(string, mode))
   end
 
-  # ----------------- #
-  # String Conversion #
-  # ----------------- #
+  # -------------------------- #
+  # String & IOlist Conversion #
+  # -------------------------- #
 
   @doc """
   Convert a `t:t/0` or `t:pinyin_list/0` to a numbered version.
@@ -574,6 +574,39 @@ defmodule Pinyin do
       str when is_binary(str) -> str
     end)
     |> Enum.join()
+  end
+
+  @doc """
+  Convert a `t:t/0` or `t:pinyin_list/0` to numbered iodata.
+
+  Identical to `numbered/1`, except that the numbered pinyin is written as `t:iodata/0` instead of
+  as a `t:String.t/0`.
+
+  ## Examples
+
+      iex> numbered_iodata(~p/nǐ/s)
+      ["n", "i", "3"]
+
+      iex> numbered_iodata(~p/lüè/s)
+      ["l", "ve", "4"]
+
+      iex> numbered_iodata(~p/nǐhǎo/)
+      [["n", "i", "3"], ["h", "ao", "3"]]
+
+      iex> numbered_iodata(~p/Nǐhǎo, how are you?/w)
+      [["N", "i", "3"], ["h", "ao", "3"], ", ", "how", " ", "a", ["r", "e"], " ", "you", "?"]
+  """
+  @spec numbered_iodata(t() | pinyin_list()) :: iodata()
+  def numbered_iodata(%Pinyin{initial: "", final: f, tone: 0}), do: f
+  def numbered_iodata(%Pinyin{initial: "", final: f, tone: t}), do: [f, to_string(t)]
+  def numbered_iodata(%Pinyin{initial: i, final: f, tone: 0}), do: [i, f]
+  def numbered_iodata(%Pinyin{initial: i, final: f, tone: t}), do: [i, f, to_string(t)]
+
+  def numbered_iodata(list) when is_list(list) do
+    Enum.map(list, fn
+      p = %Pinyin{} -> numbered_iodata(p)
+      other -> other
+    end)
   end
 
   @doc """
@@ -631,6 +664,50 @@ defmodule Pinyin do
   end
 
   defp replace_v(str), do: String.replace(str, ~w(v V), &if(&1 == "v", do: "ü", else: "Ü"))
+
+  @doc """
+  Convert a `t:t/0` or `t:pinyin_list/0` to marked iodata.
+
+  Identical to `marked/1`, except that the marked pinyin is written as `t:iodata/0` instead of as
+  a `t:String.t/0`.
+  """
+  @spec marked_iodata(t() | pinyin_list()) :: iodata()
+  # Avoid work when there is no tone marker
+  def marked_iodata(%Pinyin{initial: "", final: f, tone: 0}), do: f
+
+  # Special cases
+  def marked_iodata(%Pinyin{initial: "", final: "ê", tone: t}), do: mark("ê", t)
+  def marked_iodata(%Pinyin{initial: "", final: "Ê", tone: t}), do: mark("Ê", t)
+  def marked_iodata(%Pinyin{initial: "", final: "m", tone: t}), do: mark("m", t)
+  def marked_iodata(%Pinyin{initial: "", final: "M", tone: t}), do: mark("M", t)
+
+  def marked_iodata(%Pinyin{initial: "", final: <<c, rem::binary>>, tone: t}) when c in [?n, ?N] do
+    [mark("n", t), rem]
+  end
+
+  def marked_iodata(%Pinyin{initial: i, final: f, tone: t}) do
+    final = replace_v_iolist(f, 0)
+
+    vowel = final |> String.codepoints() |> Enum.reduce(nil, &select_max/2)
+    i <> String.replace(final, vowel, mark(vowel, t))
+  end
+
+  def marked_iodata(list) when is_list(list) do
+    Enum.map(list, fn
+      p = %Pinyin{} -> numbered_iodata(p)
+      other -> other
+    end)
+  end
+
+  defp replace_v_iolist(binary, offset) when offset > byte_size(binary), do: binary
+
+  defp replace_v_iolist(binary, offset) do
+    case binary do
+      <<pre::binary-size(offset), ?v, rem::binary>> -> [pre, "ü", rem]
+      <<pre::binary-size(offset), ?V, rem::binary>> -> [pre, "Ü", rem]
+        _ -> replace_v_iolist(binary, offset + 1)
+    end
+  end
 
   # Tone Placement
   # --------------
