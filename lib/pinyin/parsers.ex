@@ -67,9 +67,12 @@ defmodule Pinyin.Parsers do
   # Parse results -> Pinyin #
   # ----------------------- #
 
-  import Pinyin, only: [create: 3]
-
   defp char_to_integer(c), do: c - ?0
+
+  defp create(initial, final, tone) do
+    final = String.replace(final, "ü", "v")
+    %Pinyin{initial: initial, final: final, tone: tone}
+  end
 
   defp numbered_to_pinyin([initial, final, tone]), do: create(initial, final, tone)
   defp numbered_to_pinyin([initial, final]) when is_binary(final), do: create(initial, final, 0)
@@ -131,13 +134,18 @@ defmodule Pinyin.Parsers do
       |> reduce({Kernel, :to_string, []})
     end
 
+    def not_split_until(parser) do
+      times(lookahead_not(parser) |> utf8_char(@not_split_chars), min: 1)
+      |> reduce({Kernel, :to_string, []})
+    end
+
     def word(parser), do: parser |> times(min: 1) |> lookahead_not(not_split())
 
     def only(parser), do: choice([word(parser), split()]) |> repeat() |> eos()
     def words(parser), do: choice([word(parser), word(not_split()), split()]) |> repeat() |> eos()
 
     def mixed(parser) do
-      choice([times(parser, min: 1), not_split(), split()]) |> repeat() |> eos()
+      choice([times(parser, min: 1), not_split_until(parser), split()]) |> repeat() |> eos()
     end
   end
 
