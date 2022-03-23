@@ -562,7 +562,6 @@ defmodule Pinyin do
 
       iex> numbered(~p/Nǐhǎo, how are you?/w)
       "Ni3hao3, how are you?"
-
   """
   @spec numbered(t() | pinyin_list()) :: String.t()
   def numbered(%Pinyin{initial: i, final: f, tone: 0}), do: i <> f
@@ -619,7 +618,7 @@ defmodule Pinyin do
     final = replace_v(f)
 
     vowel = final |> String.codepoints() |> Enum.reduce(nil, &select_max/2)
-    i <> String.replace(final, vowel, Pinyin.Char.with_tone(vowel, t))
+    i <> String.replace(final, vowel, mark(vowel, t))
   end
 
   def marked(list) when is_list(list) do
