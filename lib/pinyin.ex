@@ -3,20 +3,19 @@ defmodule Pinyin do
   Utilities to deal with pinyin syllables and groups thereof.
 
   The main goal of this module is to provide functions to manipulate strings that contain pinyin
-  words, which are potentially mixed with other content.  Users of this module can use `read/2`,
-  `read!/2` or `sigil_p/2` to parse a string and turn it into a `t:pinyin_list/0`. Afterwards,
-  such a list can be converted into a "numbered" or a "marked" string. Numbered strings are
-  created with `numbered/1`; in this representation, tone marks are not added to the pinyin
-  syllable, numbers are used to indicate the tone instead. When `marked/1` is used, pinyin is
-  printed with tone marks.
+  words, which are potentially mixed with other content. These strings are represented by the
+  `t:pinyin_list/0` type. Pinyin lists can be obtained by parsing a string with the `read/2`,
+  `read!/2` or `sigil_p/2` functions, or by using `Hanzi.to_pinyin/2`. Afterwards, these lists can
+  be converted into a _numbered_ or marked_ representation by using the `numbered/1` or
+  `marked/1` function, respectively.
 
-  When a string is parsed with `read/2`, it is converted into a list containing strings and
-  `t:t/0` structs. These structs encode pinyin syllables. Users of this module generally do not
-  need to worry about manipulating these structs directly, but they are exposed for users who want
-  to handle pinyin using custom logic. `create/2`, `from_marked/1` and `from_numbered/2` can be
-  used to directly create a pinyin struct for a given syllable. Like `t:pinyin_list/0`, `t:t/0`
-  structs can be converted to strings with `numbered/1` and `marked/1`.
+  A `t:pinyin_list/0` is a list which contains strings and pinyin structs (`t:t/0`). These structs
+  are used to encode pinyin syllables; they can be created directly through the use of the
+  `from_marked/1`, `from_marked!/1`, `from_numbered/1`, `from_numbered!/1`, `from_string/1` or
+  `from_string!/1` functions. Like `t:pinyin_lists/0`, `t:t/0` structs can be converted to
+  numbered or marked strings through the use of the `numbered/1` and `marked/1` functions.
   """
+  alias Pinyin.Parsers
 
   # ----------------- #
   # Compile-time Work #
@@ -31,31 +30,31 @@ defmodule Pinyin do
 
   # Function which can add a tone mark to a character. We generate all valid combinations at
   # compile time.
-  @spec _mark(String.t(), 0..4) :: String.t()
-  def _mark(char, tone)
+  @spec mark(String.t(), 0..4) :: String.t()
+  defp mark(char, tone)
 
   for char <- markeable_characters, {tone, idx} <- Enum.with_index(tone_diacritic_combiners, 1) do
     # We normalise the string to ensure a compact representation
     marked = String.normalize(<<char::binary, tone::utf8>>, :nfc)
 
-    def _mark(unquote(char), unquote(idx)), do: unquote(marked)
+    defp mark(unquote(char), unquote(idx)), do: unquote(marked)
   end
 
-  def _mark(c, _), do: c
+  defp mark(c, _), do: c
 
   # ----- #
   # Types #
   # ----- #
 
   @typedoc """
-  Representation of a pinyin syllable.
+  Representation of a single pinyin syllable.
 
-  This struct represents a single syllable in pinyin. It stores a textual representation of the
-  syllable _without_ any tone marks. In this representation, `ü` is always stored as v. The tone
-  of the syllable is stored in the `tone` field. `0` represents the neutral tone.
+  This type represents a single syllable in pinyin. Said otherwise, an instance of this type
+  corresponds to a single Han character.
 
-  Do not create a pinyin struct manually. Instead, use a function such as `create/2`,
-  `from_marked/1`, `from_numbered/2` or use the `sigil_p/2` sigil.
+  Instances of this type should not be created manually, instead instances can be created from a
+  numbered or marked string through the use of the `from_numbered/1`, `from_numbered!/1`,
+  `from_marked/1`, `from_marked!/1` functions or by using the `sigil_p/2` sigil.
   """
   @type t :: %__MODULE__{tone: 0..4, initial: String.t(), final: String.t()}
 
@@ -64,147 +63,181 @@ defmodule Pinyin do
 
   @typedoc """
   List of pinyin syllables mixed with plain strings.
+
+  An instance of this type can be created from a string containing Han characters with the
+  `Hanzi.to_pinyin/2` function. Alternatively, the `read/2` or `read!/2` functions can be used to
+  obtain an instance of this type by parsing a string.
+
+  The `marked/1` and `numbered/1` functions can be used to convert an instance of this type into a
+  string.
   """
   @type pinyin_list :: [t() | String.t()]
 
-  # ---------------------- #
-  # Pinyin Struct Creation #
-  # ---------------------- #
+  # -------- #
+  # Creation #
+  # -------- #
+
+  defp parser_result({:ok, res, "", %{}, _, _}), do: {:ok, res}
+  defp parser_result({:error, _, rem, %{}, _, _}), do: {:error, rem}
+
+  defp parser_result!({:ok, res, "", %{}, _, _}), do: res
+  defp parser_result!({:error, _, rem, %{}, _, _}), do: raise(ParseError, rem)
 
   @doc """
-  Create a Pinyin struct (`t:t/0`) from an unmarked string and a tone numeral.
+  Create a pinyin struct (`t:t/0`) from a string with tone marks.
 
-  This function is useful if you want to dynamically create pinyin structs. The use of this
-  function is preferred over directly using `%Pinyin{}`, as this function normalises `word` and
-  verifies `tone` is valid before the struct is created.
+  This function can only be used to parse a single pinyin syllable (e.g. "nǐ", not "nǐhǎo"). If
+  parsing fails, an `{:error, <remainder of string>}` is returned, `<remainder of string>`
+  contains the part of the string which made parsing fail.
 
   ## Examples
 
-      iex> Pinyin.create("n", "i", 3)
-      %Pinyin{tone: 3, initial: "n", final: "i"}
+      iex> Pinyin.from_marked("nǐ")
+      {:ok, %Pinyin{initial: "n", final: "i", tone: 3}}
 
-      iex> Pinyin.create("l", "üe", 4)
-      %Pinyin{tone: 4, initial: "l", final: "ve"}
+      iex> Pinyin.from_marked("nǐhǎo")
+      {:error, "hǎo"}
 
-      iex> Pinyin.create("l", "ve", 4)
-      %Pinyin{tone: 4, initial: "l", final: "ve"}
-
-      iex> Pinyin.create("n", "i", 5)
-      ** (FunctionClauseError) no function clause matching in Pinyin.create/3
-
+      iex> Pinyin.from_marked("hello")
+      {:error, "llo"}
   """
-  @spec create(String.t(), String.t(), 0..4) :: t()
-  def create(initial, final, tone \\ 0) when tone in 0..4 do
-    final = String.replace(final, "ü", "v")
-    %Pinyin{initial: initial, final: final, tone: tone}
+  @spec from_marked(String.t()) :: {:ok, t()} | {:error, String.t()}
+  def from_marked(word) do
+    case word |> Parsers.marked_syllable() |> parser_result() do
+      {:ok, [res]} -> {:ok, res}
+      err -> err
+    end
   end
 
   @doc """
   Create a pinyin struct (`t:t/0`) from a string with tone marks.
 
-  When converting the string, the tone marker is stripped and placed in the `tone` field of the
-  resulting struct. An `ArgumentError` is thrown if multiple tone marks are present. Therefore,
-  this function should only be used for a single pinyin word.
+  Like `from_marked/1`, but returns the result or raises an exception if an error occurred while
+  parsing.
 
   ## Examples
 
-      iex> Pinyin.from_marked("nǐ")
-      %Pinyin{tone: 3, initial: "n", final: "i"}
+      iex> Pinyin.from_marked!("nǐ")
+      #Pinyin<nǐ>
 
-      iex> Pinyin.from_marked("nǐ")
-      %Pinyin{tone: 3, initial: "n", final: "i"}
+      iex> Pinyin.from_marked!("nǐhǎo")
+      ** (ParseError) Error occurred when attempting to parse: "hǎo"
 
-      iex> Pinyin.from_marked("nǐhǎo")
-      ** (ArgumentError) Multiple tone marks present in 'nǐhǎo'
-
-      iex> Pinyin.from_marked("hello")
-      ** (ArgumentError) No Pinyin word found in 'hello'
-
+      iex> Pinyin.from_marked!("hello")
+      ** (ParseError) Error occurred when attempting to parse: "llo"
   """
-  @spec from_marked(String.t()) :: t()
-  def from_marked(word) do
-    {:ok, parsed, _, _, _, _} = Pinyin.Parsers.pinyin_words(word)
-
-    case parsed do
-      [head = %Pinyin{} | []] ->
-        head
-
-      [head = %Pinyin{} | _tail] ->
-        raise ArgumentError, "Multiple tone marks present in '#{word}'"
-
-      _ ->
-        raise ArgumentError, "No Pinyin word found in '#{word}'"
-    end
-  end
+  @spec from_marked!(String.t()) :: t() | no_return()
+  def from_marked!(word), do: word |> Parsers.marked_syllable() |> parser_result!() |> hd()
 
   @doc """
-  Create a pinyin struct (`t:t/0`) from an initial string and finalstring, with tone marks.
+  Create a pinyin struct (`t:t/0`) from a string with a tone number.
 
-  When converting the string, the tone marker is stripped and placed in the `tone` field of the
-  resulting struct. An `ArgumentError` is thrown if multiple tone marks are present. Therefore,
-  this function should only be used for a single pinyin word.
+  This function can only be used to parse a single pinyin syllable (e.g. "ni3", not "ni3hao3"),
+  no whitespace may be present between the pinyin syllable and the tone marker. The tone marker
+  should be a number between 1 and 4 and the last element of the string.
+
+  If parsing fails, an `{:error, <remainder of string>}` is returned, `<remainder of string>`
+  contains the part of the string which made parsing fail.
 
   ## Examples
 
-      iex> Pinyin.from_marked("n", "ǐ")
-      %Pinyin{tone: 3, initial: "n", final: "i"}
+      iex> Pinyin.from_numbered("ni3")
+      {:ok, %Pinyin{initial: "n", final: "i", tone: 3}}
 
-      iex> Pinyin.from_marked("n", "ǐ")
-      %Pinyin{tone: 3, initial: "n", final: "i"}
+      iex> Pinyin.from_numbered("ni3hao3")
+      {:error, "hao3"}
 
-      iex> Pinyin.from_marked("n", "ǐhǎo")
-      ** (ArgumentError) Multiple tone marks present in 'n,ǐhǎo'
+      iex> Pinyin.from_numbered("ha3o")
+      {:error, "o"}
 
+      iex> Pinyin.from_numbered("hello")
+      {:error, "llo"}
   """
-  @spec from_marked(String.t(), String.t()) :: t()
-  def from_marked(initial, final) do
-    {final, tone} =
-      final
-      |> String.graphemes()
-      |> Enum.map(&Pinyin.Char.split/1)
-      |> Enum.map_reduce(0, fn
-        {char, tone}, 0 -> {char, tone}
-        {char, 0}, acc -> {char, acc}
-        _, _ -> raise ArgumentError, "Multiple tone marks present in '#{initial},#{final}'"
-      end)
-
-    create(initial, Enum.join(final), tone)
+  @spec from_numbered(String.t()) :: {:ok, t()} | {:error, String.t()}
+  def from_numbered(word) do
+    case word |> Parsers.numbered_syllable() |> parser_result() do
+      {:ok, [res]} -> {:ok, res}
+      err -> err
+    end
   end
 
   @doc """
   Create a pinyin struct (`t:t/0`) from a string with a tone number.
 
-  The tone number has to be 1, 2, 3 or 4 and has to be the last element of the string. If this is
-  not the case, an invalid pinyin struct is obtained.
-
-  If the tone of the word is known upfront, the use of `create/2` should be preferred, as it does
-  not need to parse the string.
+  Like `from_numbered/1`, but returns the result or raises an exception if an error occurred while
+  parsing.
 
   ## Examples
 
-      iex> Pinyin.from_numbered("n", "i3")
-      %Pinyin{tone: 3, initial: "n", final: "i"}
+      iex> Pinyin.from_numbered!("ni3")
+      #Pinyin<nǐ>
 
-      iex> Pinyin.from_numbered("n", "i5")
-      %Pinyin{tone: 0, initial: "n", final: "i5"}
+      iex> Pinyin.from_numbered!("ni3hao3")
+      ** (ParseError) Error occurred when attempting to parse: "hao3"
 
-      iex> Pinyin.from_numbered("n", "i")
-      %Pinyin{tone: 0, initial: "n", final: "i"}
+      iex> Pinyin.from_numbered!("ha3o")
+      ** (ParseError) Error occurred when attempting to parse: "o"
 
+      iex> Pinyin.from_numbered!("hello")
+      ** (ParseError) Error occurred when attempting to parse: "llo"
   """
-  @spec from_numbered(String.t(), String.t()) :: t()
-  def from_numbered(initial, final) do
-    if String.ends_with?(final, ~w(1 2 3 4)) do
-      {final, tone} = String.split_at(final, -1)
-      create(initial, final, String.to_integer(tone))
-    else
-      create(initial, final)
+  @spec from_numbered!(String.t()) :: t() | no_return()
+  def from_numbered!(word), do: word |> Parsers.numbered_syllable() |> parser_result!() |> hd()
+
+  @doc """
+  Create a pinyin struct (`t:t/0`) from a string.
+
+  This function can be used to parse a single pinyin syllable which is marked or which has a tone
+  number. It combines the functionality of `from_marked/1` and `from_numbered/1`.The limitations
+  of these functions apply to this function.
+
+  If parsing fails, an `{:error, <remainder of string>}` is returned, `<remainder of string>`
+  contains the part of the string which made parsing fail.
+
+  ## Examples
+
+      iex> Pinyin.from_string("ni3")
+      {:ok, %Pinyin{initial: "n", final: "i", tone: 3}}
+
+      iex> Pinyin.from_string("nǐ")
+      {:ok, %Pinyin{initial: "n", final: "i", tone: 3}}
+
+      iex> Pinyin.from_string("ni3hao3")
+      {:error, "hao3"}
+
+      iex> Pinyin.from_string("nǐhǎo")
+      {:error, "hǎo"}
+  """
+  @spec from_string(String.t()) :: {:ok, t()} | {:error, String.t()}
+  def from_string(word) do
+    case word |> Parsers.syllable() |> parser_result() do
+      {:ok, [res]} -> {:ok, res}
+      err -> err
     end
   end
 
-  # -------------- #
-  # Pinyin Strings #
-  # -------------- #
+  @doc """
+  Create a pinyin struct (`t:t/0`) from a string.
+
+  Like `from_string/1`, but returns the result or raises an exception if an error occurred while
+  parsing.
+
+  ## Examples
+
+      iex> Pinyin.from_string!("ni3")
+      #Pinyin<nǐ>
+
+      iex> Pinyin.from_string!("nǐ")
+      #Pinyin<nǐ>
+
+      iex> Pinyin.from_string!("ni3hao3")
+      ** (ParseError) Error occurred when attempting to parse: "hao3"
+
+      iex> Pinyin.from_string!("nǐhǎo")
+      ** (ParseError) Error occurred when attempting to parse: "hǎo"
+  """
+  @spec from_string!(String.t()) :: t() | no_return()
+  def from_string!(word), do: word |> Parsers.syllable() |> parser_result!() |> hd()
 
   @doc """
   Read a string and convert it into a list of string and pinyin structs.
@@ -223,7 +256,7 @@ defmodule Pinyin do
   ## Parse Modes
 
   By default, this function only accepts strings which consists exclusively of pinyin, whitespace
-  and puncutation. Parsing any text that cannot be interpreted as pinyin will result in an error:
+  and punctuation. Parsing any text that cannot be interpreted as pinyin will result in an error:
 
       iex> Pinyin.read("Ni3hao3!")
       {:ok, [%Pinyin{tone: 3, initial: "N", final: "i"}, %Pinyin{tone: 3, initial: "h", final: "ao"}, "!"]}
@@ -242,8 +275,9 @@ defmodule Pinyin do
     considered to be non-pinyin text. This mode does not return errors.
   - `:mixed`: Any word can contain a mixture of pinyin and non-pinyin characters. The read
     function will interpret anything it can interpret as pinyin as pinyin and leaves the other
-    text unmodified. This is mainly useful to mix characters and pinyin. It is not recommended to
-    use this mode to mix pinyin and normal text. This mode does not return errors.
+    text unmodified. This is mainly useful to mix characters and pinyin. It is recommend to use
+    the `:words` mode when possible instead of this mode, as this mode will often parse regular
+    text as pinyin text. This mode does not return errors.
 
   The following examples show the use of all three modes:
 
@@ -304,26 +338,20 @@ defmodule Pinyin do
 
       iex> Pinyin.read("zheer")
       {:ok, [%Pinyin{initial: "zh", final: "e"}, %Pinyin{initial: "", final: "er"}]}
-
   """
   @spec read(String.t(), :exclusive | :words | :mixed) ::
           {:ok, pinyin_list()} | {:error, String.t()}
   def read(string, mode \\ :exclusive) when mode in [:exclusive, :words, :mixed] do
-    res =
-      case mode do
-        :exclusive -> Pinyin.Parsers.pinyin_only(string)
-        :words -> Pinyin.Parsers.pinyin_words(string)
-        :mixed -> Pinyin.Parsers.pinyin_mix(string)
-      end
-
-    case res do
-      {:ok, lst, "", %{}, _, _} -> {:ok, lst}
-      {:error, _, remainder, %{}, _, _} -> {:error, remainder}
+    case mode do
+      :exclusive -> Parsers.pinyin_only(string)
+      :words -> Parsers.pinyin_words(string)
+      :mixed -> Parsers.pinyin_mix(string)
     end
+    |> parser_result()
   end
 
   @doc """
-  Identical to `read/2`, but returns the result or a `Pinyin.ParseError`
+  Identical to `read/2`, but returns the result or a `ParseError`
 
   ## Examples
 
@@ -334,14 +362,133 @@ defmodule Pinyin do
       [%Pinyin{tone: 3, initial: "n", final: "i"}, " ", %Pinyin{tone: 3, initial: "h", final: "ao"}]
 
       iex> Pinyin.read!("ni 3")
-      ** (Pinyin.ParseError) Error occurred when attempting to parse: `3`
-
+      ** (ParseError) Error occurred when attempting to parse: "3"
   """
-  @spec read!(String.t(), :exclusive | :words | :mixed) ::
-          pinyin_list() | no_return()
-  def read!(string, mode \\ :exclusive)
-      when mode in [:exclusive, :words, :mixed] do
+  @spec read!(String.t(), :exclusive | :words | :mixed) :: pinyin_list() | no_return()
+  def read!(string, mode \\ :exclusive) when mode in [:exclusive, :words, :mixed] do
     case read(string, mode) do
+      {:ok, res} -> res
+      {:error, remainder} -> raise ParseError, remainder
+    end
+  end
+
+  @doc """
+  Read a string containing marked pinyin and convert it into `t:pinyin_list/0`.
+
+  Like `read/2`, but only accepts marked pinyin.
+
+  ## Examples
+
+      iex> Pinyin.read_marked("Nǐhǎo!", :exclusive)
+      {:ok, [%Pinyin{tone: 3, initial: "N", final: "i"}, %Pinyin{tone: 3, initial: "h", final: "ao"}, "!"]}
+
+      iex> Pinyin.read_marked("Nǐhǎo, hello!", :exclusive)
+      {:error, "hello!"}
+
+      iex> Pinyin.read_marked("Ni3hao3, hello!", :exclusive)
+      {:error, "Ni3hao3, hello!"}
+
+      iex> Pinyin.read_marked("Nǐhǎo, hello!", :words)
+      {:ok, [%Pinyin{tone: 3, initial: "N", final: "i"}, %Pinyin{tone: 3, initial: "h", final: "ao"}, ", ", "hello", "!"]}
+
+      iex> Pinyin.read_marked("Ni3hao3, hello!", :words)
+      {:ok, ["Ni3hao3", ", ", "hello", "!"]}
+
+      iex> Pinyin.read_marked("Ni3hǎo, hello!", :words)
+      {:ok, ["Ni3hǎo", ", ", "hello", "!"]}
+
+      iex> Pinyin.read_marked("Ni3hao3!", :mixed)
+      {:ok, [%Pinyin{tone: 0, initial: "N", final: "i"}, "3", %Pinyin{tone: 0, initial: "h", final: "ao"}, "3", "!"]}
+
+      iex> Pinyin.read_marked("Ni3hǎo, hello!", :mixed)
+      {:ok, [%Pinyin{tone: 0, initial: "N", final: "i"}, "3", %Pinyin{tone: 3, initial: "h", final: "ao"}, ", ", %Pinyin{initial: "h", final: "e"}, "l", %Pinyin{initial: "l", final: "o"}, "!"]}
+  """
+  @spec read_marked(String.t(), :exclusive | :words | :mixed) ::
+          {:ok, pinyin_list()} | {:error, String.t()}
+  def read_marked(string, mode \\ :exclusive) do
+    case mode do
+      :exclusive -> Parsers.marked_only(string)
+      :words -> Parsers.marked_words(string)
+      :mixed -> Parsers.marked_mix(string)
+    end
+    |> parser_result()
+  end
+
+  @doc """
+  Identical to `read_marked/2`, but returns the result or a `ParseError`
+
+  ## Examples
+
+      iex> Pinyin.read_marked!("nǐhǎo")
+      [%Pinyin{tone: 3, initial: "n", final: "i"}, %Pinyin{tone: 3, initial: "h", final: "ao"}]
+
+      iex> Pinyin.read_marked!("ni3 hao3")
+      ** (ParseError) Error occurred when attempting to parse: "ni3 hao3"
+  """
+  @spec read_marked!(String.t(), :exclusive | :words | :mixed) :: pinyin_list() | no_return()
+  def read_marked!(string, mode \\ :exclusive) when mode in [:exclusive, :words, :mixed] do
+    case read_marked(string, mode) do
+      {:ok, res} -> res
+      {:error, remainder} -> raise ParseError, remainder
+    end
+  end
+
+  @doc """
+  Read a string containing numbered pinyin and convert it into `t:pinyin_list/0`.
+
+  Like `read/2`, but only accepts numbered pinyin.
+
+  ## Examples
+
+      iex> Pinyin.read_numbered("Ni3hao3!", :exclusive)
+      {:ok, [%Pinyin{tone: 3, initial: "N", final: "i"}, %Pinyin{tone: 3, initial: "h", final: "ao"}, "!"]}
+
+      iex> Pinyin.read_numbered("Ni3hao3, hello!", :exclusive)
+      {:error, "hello!"}
+
+      iex> Pinyin.read_numbered("Nǐhǎo, hello!", :exclusive)
+      {:error, "Nǐhǎo, hello!"}
+
+      iex> Pinyin.read_numbered("Ni3hao3, hello!", :words)
+      {:ok, [%Pinyin{tone: 3, initial: "N", final: "i"}, %Pinyin{tone: 3, initial: "h", final: "ao"}, ", ", "hello", "!"]}
+
+      iex> Pinyin.read_numbered("Nǐhǎo, hello!", :words)
+      {:ok, ["Nǐhǎo", ", ", "hello", "!"]}
+
+      iex> Pinyin.read_numbered("Ni3hǎo, hello!", :words)
+      {:ok, ["Ni3hǎo", ", ", "hello", "!"]}
+
+      iex> Pinyin.read_numbered("Ni3hǎo!", :mixed)
+      {:ok, [%Pinyin{tone: 3, initial: "N", final: "i"}, "hǎ", %Pinyin{final: "o"}, "!"]}
+
+      iex> Pinyin.read_numbered("Ni3hǎo, hello!", :mixed)
+      {:ok, [%Pinyin{tone: 3, initial: "N", final: "i"}, "hǎ", %Pinyin{final: "o"}, ", ", %Pinyin{initial: "h", final: "e"}, "l", %Pinyin{initial: "l", final: "o"}, "!"]}
+  """
+  @spec read_numbered(String.t(), :exclusive | :words | :mixed) ::
+          {:ok, pinyin_list()} | {:error, String.t()}
+  def read_numbered(string, mode \\ :exclusive) do
+    case mode do
+      :exclusive -> Parsers.numbered_only(string)
+      :words -> Parsers.numbered_words(string)
+      :mixed -> Parsers.numbered_mix(string)
+    end
+    |> parser_result()
+  end
+
+  @doc """
+  Identical to `read_numbered/2`, but returns the result or a `ParseError`
+
+  ## Examples
+
+      iex> Pinyin.read_numbered!("ni3hao3")
+      [%Pinyin{tone: 3, initial: "n", final: "i"}, %Pinyin{tone: 3, initial: "h", final: "ao"}]
+
+      iex> Pinyin.read_numbered!("nǐhǎo")
+      ** (ParseError) Error occurred when attempting to parse: "nǐhǎo"
+  """
+  @spec read_numbered!(String.t(), :exclusive | :words | :mixed) :: pinyin_list() | no_return()
+  def read_numbered!(string, mode \\ :exclusive) when mode in [:exclusive, :words, :mixed] do
+    case read_numbered(string, mode) do
       {:ok, res} -> res
       {:error, remainder} -> raise ParseError, remainder
     end
@@ -355,7 +502,7 @@ defmodule Pinyin do
   `:mixed` mode respectively.
 
   When this sigil is called with the `s` modifier, a pinyin struct is created by calling
-  `from_numbered/1`.
+  `from_string!/1`.
 
   ## Examples
 
@@ -373,11 +520,7 @@ defmodule Pinyin do
 
   """
   defmacro sigil_p({:<<>>, _, [word]}, [?s]) when is_binary(word) do
-    [pinyin] = read!(word)
-
-    quote do
-      unquote(Macro.escape(pinyin))
-    end
+    Macro.escape(from_string!(word))
   end
 
   defmacro sigil_p({:<<>>, _, [string]}, mode)
@@ -389,11 +532,7 @@ defmodule Pinyin do
         [] -> :exclusive
       end
 
-    res = Macro.escape(read!(string, mode))
-
-    quote do
-      unquote(res)
-    end
+    Macro.escape(read!(string, mode))
   end
 
   # ----------------- #
@@ -469,12 +608,12 @@ defmodule Pinyin do
   def marked(%Pinyin{initial: i, final: f, tone: 0}), do: i <> replace_v(f)
 
   # Special cases
-  def marked(%Pinyin{initial: "", final: "ê", tone: t}), do: _mark("ê", t)
-  def marked(%Pinyin{initial: "", final: "Ê", tone: t}), do: _mark("Ê", t)
-  def marked(%Pinyin{initial: "", final: "m", tone: t}), do: _mark("m", t)
-  def marked(%Pinyin{initial: "", final: "M", tone: t}), do: _mark("M", t)
-  def marked(%Pinyin{initial: "", final: <<"n", rem::binary>>, tone: t}), do: _mark("n", t) <> rem
-  def marked(%Pinyin{initial: "", final: <<"N", rem::binary>>, tone: t}), do: _mark("N", t) <> rem
+  def marked(%Pinyin{initial: "", final: "ê", tone: t}), do: mark("ê", t)
+  def marked(%Pinyin{initial: "", final: "Ê", tone: t}), do: mark("Ê", t)
+  def marked(%Pinyin{initial: "", final: "m", tone: t}), do: mark("m", t)
+  def marked(%Pinyin{initial: "", final: "M", tone: t}), do: mark("M", t)
+  def marked(%Pinyin{initial: "", final: <<"n", rem::binary>>, tone: t}), do: mark("n", t) <> rem
+  def marked(%Pinyin{initial: "", final: <<"N", rem::binary>>, tone: t}), do: mark("N", t) <> rem
 
   def marked(%Pinyin{initial: i, final: f, tone: t}) do
     final = replace_v(f)
@@ -550,8 +689,5 @@ end
 
 defimpl Inspect, for: Pinyin do
   import Inspect.Algebra
-
-  def inspect(p = %Pinyin{}, _) do
-    concat(["#Pinyin<", to_string(p), ">"])
-  end
+  def inspect(p = %Pinyin{}, _), do: concat(["#Pinyin<", to_string(p), ">"])
 end

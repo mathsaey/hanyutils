@@ -13,7 +13,7 @@ defmodule Hanzi.Map do
   |> File.stream!()
   |> Stream.drop_while(&String.starts_with?(&1, ["#", "\n"]))
   |> Stream.map(&String.split/1)
-  |> Stream.map(fn [c, t | entries] -> {c, t, Enum.map(entries, &Pinyin.from_marked/1)} end)
+  |> Stream.map(fn [c, t | entries] -> {c, t, Enum.map(entries, &Pinyin.from_marked!/1)} end)
   |> Stream.map(fn
     {c, "p", [p]} -> %{char: c, pron: p}
     {c, "p", [pm, pt]} -> %{char: c, pron: pm, pron_tw: pt}

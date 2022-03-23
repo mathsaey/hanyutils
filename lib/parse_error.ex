@@ -6,7 +6,7 @@ defmodule ParseError do
 
   @impl true
   def exception(remainder) do
-    msg = "Error occurred when attempting to parse: `#{remainder}`"
+    msg = "Error occurred when attempting to parse: \"#{remainder}\""
     %__MODULE__{message: msg}
   end
 end
