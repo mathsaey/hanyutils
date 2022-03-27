@@ -7,14 +7,14 @@
 # =============================================================================
 #
 # Unihan_Readings.txt
-# Date: 2018-11-09 21:36:19 GMT [JHJ]
-# Unicode version: 12.0.0
+# Date: 2021-08-06 16:32:36 GMT [JHJ]
+# Unicode version: 14.0.0
 #
 # Unicode Character Database
-# © 2018 Unicode®, Inc.
+# © 2021 Unicode®, Inc.
 # Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 # For terms of use, see http://www.unicode.org/terms_of_use.html
-# For documentation, see http://www.unicode.org/reports/tr44/
+# For documentation, see http://www.unicode.org/reports/tr38/
 #
 # This file contains data on the following fields from the Unihan database:
 #	kCantonese
@@ -27,6 +27,7 @@
 #	kKorean
 #	kMandarin
 #	kTang
+#	kTGHZ2013
 #	kVietnamese
 #	kXHC1983
 #
@@ -169,6 +170,7 @@
 㒉 p tǎng
 㒊 a sè
 㒊 p sè
+㒋 p sī
 㒌 p qióng
 㒍 a léi
 㒍 p léi
@@ -293,6 +295,7 @@
 㓪 p lǎng
 㓭 a shé
 㓭 p shé
+㓮 p diāo
 㓯 p lí
 㓰 p huà
 㓱 a tóu shū
@@ -1375,6 +1378,7 @@
 㟔 p hán
 㟖 a lòng lóng
 㟖 p lòng
+㟗 p bīn
 㟘 a tiáo
 㟘 p tiáo
 㟙 a zé
@@ -1786,6 +1790,7 @@
 㣶 p zhān
 㣷 a nìng
 㣷 p nìng
+㣺 p xīn
 㣻 a yì
 㣻 p yì
 㣼 p rěn
@@ -2406,6 +2411,7 @@
 㪃 p hé
 㪄 a fú
 㪄 p fú
+㪅 p gèng gēng
 㪆 a dǐ
 㪆 p dǐ
 㪇 a xiàn
@@ -2851,6 +2857,7 @@
 㯁 p péi
 㯂 a dài
 㯂 p dài
+㯃 p qī
 㯄 a zhī
 㯄 p zhī
 㯅 a pí bī
@@ -2933,6 +2940,7 @@
 㯺 p jiàn
 㯻 a gǔn
 㯻 p gǔn
+㯽 p bīn
 㯾 a zāo
 㯾 p zāo
 㯿 a liè là
@@ -3343,6 +3351,7 @@
 㴉 p jǐ
 㴋 p sù
 㴎 a nài
+㴎 p nài
 㴏 a wǎng
 㴏 p wǎng
 㴐 a miàn miǎn
@@ -3665,6 +3674,7 @@
 㸄 p jì
 㸅 a jié jí
 㸅 p jié
+㸆 p kào
 㸇 a zuǎn
 㸇 p zuǎn
 㸉 p xiè
@@ -4893,6 +4903,7 @@
 䄁 a yì
 䄁 p yì
 䄂 p liù
+䄃 p yāng
 䄄 a yīn
 䄄 p yīn
 䄅 p juàn
@@ -6538,6 +6549,7 @@
 䓨 p yīng
 䓫 a qí
 䓫 p qí
+䓬 p zhuó
 䓭 a chà
 䓭 p chà
 䓮 a mào
@@ -7154,6 +7166,7 @@
 䙱 p dú
 䙳 a biāo è
 䙳 p biāo
+䙴 p qiān
 䙵 a xī
 䙵 p xī
 䙷 p dé
@@ -9231,7 +9244,7 @@
 䭷 a máo
 䭷 p máo
 䭸 a fù
-䭸 p bǎo
+䭸 p fù
 䭹 a áng
 䭹 p áng
 䭺 a ǎng
@@ -9490,6 +9503,7 @@
 䰕 a lú
 䰕 p lú
 䰖 p zuǎn
+䰗 p jiū
 䰘 a liú jiǎo
 䰘 p liú
 䰙 a yǐ
@@ -9653,6 +9667,7 @@
 䱻 p huá
 䱼 a zhǎn
 䱼 p zhǎn
+䱽 p chāng
 䱾 a lóu
 䱾 p lóu
 䱿 a chàn
@@ -10361,7 +10376,7 @@
 乼 p cui
 乽 p zhě
 乾 a qián gān
-乾 p gān
+乾 p qián gān
 乿 a zhì luàn
 乿 p zhì
 亀 p guī
@@ -12043,7 +12058,7 @@
 削 a qiào xiāo shào
 削 p xuē
 剋 a kè kēi
-剋 p kè
+剋 p kēi kè
 剌 a là lá
 剌 p lá
 前 a qián jiǎn
@@ -12713,7 +12728,7 @@
 变 p biàn
 叙 p xù
 叚 a jiǎ xiá
-叚 p jiǎ
+叚 p xiá jiǎ
 叛 a pàn
 叛 p pàn
 叜 p sǒu
@@ -15642,7 +15657,7 @@
 婆 a pó
 婆 p pó
 婇 a cǎi
-婇 p cāi
+婇 p cǎi
 婈 a líng
 婈 p líng
 婉 a wǎn
@@ -17967,7 +17982,7 @@
 彮 a yǒng
 彮 p yǒng
 彯 a piāo piào miǎo
-彯 p piǎo
+彯 p piāo
 彰 a zhāng
 彰 p zhāng
 影 a yǐng
@@ -18092,7 +18107,7 @@
 徳 p dé
 徴 p zhēng
 徵 a zhēng zhǐ chéng
-徵 p zhēng
+徵 p zhǐ zhēng
 徶 a bié
 徶 p bié
 德 a dé
@@ -18550,7 +18565,7 @@
 悶 a mèn mēn
 悶 p mèn
 悷 a lì
-悷 p sàn
+悷 p lì
 悸 a jì
 悸 p jì
 悹 a guàn
@@ -19104,7 +19119,6 @@
 懦 a nuò
 懦 p nuò
 懧 p nuò
-懨 a chú
 懨 p yān
 懩 a yǎng
 懩 p yǎng
@@ -20973,7 +20987,7 @@
 旼 a mín
 旼 p mín
 旽 a tūn zhùn
-旽 p tùn
+旽 p tūn
 旾 p chūn
 旿 a wǔ wù
 旿 p wǔ
@@ -22818,7 +22832,7 @@
 樊 a fán fàn
 樊 p fán
 樋 a tōng
-樋 p tǒng
+樋 p tōng
 樌 a guàn
 樌 p guàn
 樍 a zé
@@ -23186,7 +23200,7 @@
 櫙 a ōu
 櫙 p ōu
 櫚 a lǘ
-櫚 p lú
+櫚 p lǘ
 櫛 a zhì
 櫛 p zhì
 櫜 a gāo
@@ -23822,7 +23836,7 @@
 氽 a tǔn qiú
 氽 p tǔn
 氾 a fàn fán
-氾 p fàn
+氾 p fán fàn
 氿 a guǐ qiú jiǔ
 氿 p guǐ
 汀 a tīng tìng dìng
@@ -23958,7 +23972,7 @@
 沇 a yǎn wěi
 沇 p yǎn
 沈 a chén shěn tán
-沈 p chén
+沈 p shěn chén
 沉 a chén
 沉 p chén
 沊 a dàn
@@ -27293,7 +27307,7 @@
 珕 a lì
 珕 p lì
 珖 a guāng
-珖 p guàng
+珖 p guāng
 珗 p xiān
 珘 a zhōu
 珘 p zhōu
@@ -29044,7 +29058,7 @@
 瞠 a chēng zhèng
 瞠 p chēng
 瞡 a guī
-瞡 p guǐ
+瞡 p guī
 瞢 a méng máng mèng
 瞢 p méng
 瞣 p wàn
@@ -29066,7 +29080,7 @@
 瞬 a shùn
 瞬 p shùn
 瞭 a liǎo liào
-瞭 p liǎo
+瞭 p liào liǎo
 瞮 a chè
 瞮 p chè
 瞯 a xián jiàn
@@ -30799,7 +30813,7 @@
 筻 a gàng
 筻 p gàng
 筼 p yún
-筽 p o
+筽 p ōu wú
 签 p qiān
 筿 p xiǎo
 简 p jiǎn
@@ -33357,7 +33371,7 @@
 腛 a wò
 腛 p wò
 腜 a méi
-腜 p měi
+腜 p méi
 腝 a ní ruǎn nào nèn ér
 腝 p ní
 腞 a zhuàn dùn tú
@@ -33389,7 +33403,7 @@
 腫 a zhǒng
 腫 p zhǒng
 腬 a róu
-腬 p ròu
+腬 p róu
 腭 a è
 腭 p è
 腮 a sāi
@@ -33458,7 +33472,7 @@
 膐 p lǚ
 膑 p bìn
 膒 a ōu
-膒 p óu
+膒 p ōu
 膓 p cháng
 膔 a lù biāo
 膔 p lù
@@ -34840,7 +34854,7 @@
 蒐 a sōu huì
 蒐 p sōu
 蒑 a yīn
-蒑 p yìn
+蒑 p yīn
 蒒 a shī
 蒒 p shī
 蒓 a chún
@@ -36776,7 +36790,7 @@
 袶 a jiàng
 袶 p jiàng
 袷 a jiā jié
-袷 p jiá
+袷 p qiā jiá
 袸 a jiàn zùn
 袸 p jiàn
 袹 a bó mò
@@ -37369,7 +37383,7 @@
 計 a jì
 計 p jì
 訉 a fàn
-訉 p fān
+訉 p fàn
 訊 a xùn
 訊 p xùn
 訋 a diào
@@ -38119,7 +38133,7 @@
 讜 a dǎng dàng
 讜 p dǎng
 讝 a zhán
-讝 p zhán
+讝 p zhān
 讞 a yàn
 讞 p yàn
 讟 a dú
@@ -38153,7 +38167,7 @@
 论 p lùn
 讻 p xiōng
 讼 p sòng
-讽 p fèng
+讽 p fěng fèng
 设 p shè
 访 p fǎng
 诀 p jué
@@ -38162,7 +38176,7 @@
 诃 p hē
 评 p píng
 诅 p zǔ
-识 p shì
+识 p shí shì
 诇 p xiòng
 诈 p zhà
 诉 p sù
@@ -39945,7 +39959,7 @@
 送 a sòng
 送 p sòng
 适 a kuò shì
-适 p shì
+适 p shì kuò
 逃 a táo
 逃 p táo
 逄 a féng páng
@@ -40334,7 +40348,7 @@
 郗 a xī chī
 郗 p xī
 郘 a lǚ
-郘 p lǘ
+郘 p lǚ
 郙 a fǔ
 郙 p fǔ
 郚 a wú yú
@@ -40794,7 +40808,7 @@
 量 a liáng liàng
 量 p liàng
 釐 a lí xī lái tāi lài
-釐 p lí
+釐 p xī lí
 金 a jīn jìn
 金 p jīn
 釒 p jīn
@@ -43069,7 +43083,7 @@
 霯 a tèng
 霯 p tèng
 霰 a xiàn
-霰 p sǎn
+霰 p xiàn
 霱 a yù
 霱 p yù
 露 a lù lòu
@@ -45626,7 +45640,7 @@
 鴣 a gū
 鴣 p gū
 鴤 a zhōng
-鴤 p dōng
+鴤 p zhōng
 鴥 a yù
 鴥 p yù
 鴦 a yāng
@@ -46034,7 +46048,7 @@
 鷿 a pì
 鷿 p pì
 鸀 a shǔ zhú chù
-鸀 p chǔ
+鸀 p shǔ
 鸁 a luó
 鸁 p luó
 鸂 a xī qī
@@ -46719,6 +46733,7 @@
 鿫 p ào
 鿬 p tián
 鿭 p nǐ
+礼 p lǐ
 𠀀 a hē
 𠀀 p hē
 𠀁 p qī
@@ -46753,6 +46768,7 @@
 𠀼 p qián
 𠀽 a lù
 𠀽 p lù
+𠁁 p dòu
 𠁉 a chū
 𠁉 p chū
 𠁗 a shì hè
@@ -46776,6 +46792,7 @@
 𠂑 p zōu
 𠂔 a zǐ
 𠂔 p zǐ
+𠂝 p zā
 𠂟 a jīn
 𠂟 p jīn
 𠂢 a pài
@@ -46832,6 +46849,7 @@
 𠅗 p diè
 𠅚 a qí
 𠅚 p qí
+𠅤 p xí
 𠅬 a bāo
 𠅬 p bāo
 𠅱 a xiè
@@ -47900,7 +47918,6 @@
 𠣘 p zhōu
 𠣠 a kuì
 𠣠 p kuì
-𠣡 p fèng
 𠣪 a qú
 𠣪 p qú
 𠣫 a shào
@@ -50473,6 +50490,7 @@
 𡬐 p mí
 𡬓 p yí
 𡬕 a lóng
+𡬕 p lóng
 𡬖 a hān
 𡬖 p hān
 𡬗 a nì
@@ -52554,6 +52572,7 @@
 𢝀 a tú
 𢝀 p tú
 𢝁 a hōng
+𢝁 p hōng
 𢝂 a dú
 𢝂 p dú
 𢝅 a xiá
@@ -52777,6 +52796,7 @@
 𢣠 p liù
 𢣳 a ruì
 𢣳 p ruì
+𢣵 a chú
 𢣻 a lǘ
 𢣻 p lǘ
 𢣼 a chá
@@ -54416,6 +54436,7 @@
 𣔺 p mào
 𣔻 a tú chán
 𣔻 p tú
+𣔼 p gān
 𣔽 a jì
 𣔽 p jì
 𣕁 a yí
@@ -56447,6 +56468,7 @@
 𤍖 p jiān
 𤍜 a zào
 𤍜 p zào
+𤍠 p rè
 𤍤 p zhāng
 𤍽 a ruò
 𤍽 p ruò
@@ -56574,6 +56596,7 @@
 𤔉 p páo
 𤔋 a jù
 𤔋 p jù
+𤔔 p luàn
 𤔖 a luǒ
 𤔖 p luǒ
 𤔙 a shuǎ
@@ -58628,6 +58651,7 @@
 𥁸 p quān
 𥁹 a shè
 𥁹 p shè
+𥂁 p yán
 𥂂 a měng
 𥂂 p měng
 𥂃 a jù
@@ -59708,6 +59732,7 @@
 𥗶 p lèi
 𥗺 a làn
 𥗺 p làn
+𥗽 p lán
 𥗿 a lǎ
 𥗿 p lǎ
 𥘁 a lǎ
@@ -60079,6 +60104,7 @@
 𥢎 a zùn
 𥢎 p zùn
 𥢏 a diàn
+𥢏 p diàn
 𥢐 a gāo
 𥢐 p gāo
 𥢑 a gǎo hào
@@ -60087,7 +60113,6 @@
 𥢒 p láo
 𥢔 a zhuó zhào
 𥢔 p zhuó
-𥢟 p hù
 𥢢 p tuí
 𥢦 a bì
 𥢦 p bì
@@ -60146,8 +60171,8 @@
 𥣰 p biǎn
 𥣸 a mù
 𥣸 p mù
-𥣹 p ràn
 𥣺 a ràn
+𥣺 p ràn
 𥤂 a niǎo
 𥤂 p niǎo
 𥤊 a quán
@@ -60678,7 +60703,7 @@
 𥰞 a chōu sǒu
 𥰞 p chōu
 𥰟 a yuán
-𥰟 p gǎn
+𥰟 p yuán
 𥰠 a lǘ
 𥰠 p lǘ
 𥰡 a cè
@@ -62528,6 +62553,7 @@
 𦙴 a zhù
 𦙴 p zhù
 𦙵 p wàn
+𦙶 p gǔ
 𦙸 a sān
 𦙸 p sān
 𦙹 a bàn
@@ -63566,6 +63592,7 @@
 𦰙 p bì
 𦰛 a fén
 𦰛 p fén
+𦰡 p nà
 𦰥 a bāng
 𦰥 p bāng
 𦰪 a qiú
@@ -64261,6 +64288,7 @@
 𧀵 p jiàn
 𧀶 a dì
 𧀶 p dì
+𧀹 p zhè
 𧀺 a xié
 𧀺 p xié
 𧀻 a dān
@@ -64725,7 +64753,7 @@
 𧋔 a hòng
 𧋔 p hòng
 𧋕 a kùn
-𧋕 p kǔn
+𧋕 p kùn
 𧋖 a niè
 𧋖 p niè
 𧋗 a chí
@@ -65263,7 +65291,7 @@
 𧕸 a huáng
 𧕸 p huáng
 𧕺 a shuāng
-𧕺 p shuàng
+𧕺 p shuāng
 𧕼 a xǔ
 𧕼 p xǔ
 𧕿 a fěi
@@ -65971,7 +65999,7 @@
 𧥕 a zī
 𧥕 p zī
 𧥖 a lí shǐ
-𧥖 p lì
+𧥖 p lí
 𧥚 a fó
 𧥚 p fó
 𧥛 a qiǎn
@@ -66842,6 +66870,7 @@
 𧶲 p duǎn
 𧶵 a chà
 𧶵 p chà
+𧶶 p fàn
 𧶷 a zé
 𧶷 p zé
 𧶸 a chèng
@@ -67482,7 +67511,7 @@
 𨂡 a zòu
 𨂡 p zòu
 𨂢 a jí
-𨂢 p jì
+𨂢 p jí
 𨂣 a wù
 𨂣 p wù
 𨂦 a chuàn
@@ -67764,7 +67793,7 @@
 𨉅 a yè
 𨉅 p yè
 𨉋 a tuō
-𨉋 p tuó
+𨉋 p tuō
 𨉖 a zuān
 𨉖 p zuān
 𨉗 p yù
@@ -67905,6 +67934,7 @@
 𨋬 a zhěng chèng
 𨋬 p zhěng
 𨋮 a hōng chūn
+𨋮 p hōng
 𨋯 a yì
 𨋯 p yì
 𨋰 a cì
@@ -68259,7 +68289,7 @@
 𨒧 a shì
 𨒧 p shì
 𨒨 a hài
-𨒨 p nài
+𨒨 p hài
 𨒩 a ruǎn
 𨒩 p ruǎn
 𨒫 a yáng nì
@@ -68771,7 +68801,6 @@
 𨞫 p méng
 𨞲 a shēn
 𨞲 p shēn
-𨞳 p qú
 𨞶 a qiāo
 𨞶 p qiāo
 𨞷 a cán
@@ -69143,6 +69172,7 @@
 𨦱 p cōng
 𨦳 a nǎn
 𨦳 p nǎn
+𨧀 p dù
 𨧐 a tūn
 𨧐 p tūn
 𨧑 a xiàng
@@ -69177,6 +69207,7 @@
 𨧳 p chì
 𨧵 a zhì
 𨧵 p zhì
+𨨏 p bō
 𨨗 a quàn
 𨨗 p quàn
 𨨘 a qiān
@@ -69293,6 +69324,7 @@
 𨪾 a dì
 𨪾 p dì
 𨪿 a liú
+𨪿 p liú
 𨫀 a zhǎn
 𨫀 p zhǎn
 𨫁 a pō
@@ -69335,6 +69367,7 @@
 𨭆 p hēi
 𨭉 a bān
 𨭉 p bān
+𨭎 p xǐ
 𨭓 a dié
 𨭓 p dié
 𨭖 a zhǎn
@@ -69812,7 +69845,7 @@
 𨷬 a mǐ
 𨷬 p mǐ
 𨷭 a chán
-𨷭 p chǎn
+𨷭 p chán
 𨷮 a huō
 𨷮 p huō
 𨷱 a zhuǎn
@@ -69872,7 +69905,7 @@
 𨸯 a gū
 𨸯 p gū
 𨸰 a jú
-𨸰 p jù
+𨸰 p jú
 𨸱 a tiàn niǎn
 𨸱 p tiàn
 𨸷 a è
@@ -71072,7 +71105,7 @@
 𩏉 a wéi
 𩏉 p wéi
 𩏏 a wéi
-𩏏 p wěi
+𩏏 p wéi
 𩏐 a guì wěi
 𩏐 p guì
 𩏒 a dá
@@ -71664,7 +71697,7 @@
 𩗴 a bèng
 𩗴 p bèng
 𩗵 a zhēng
-𩗵 p zhěng
+𩗵 p zhēng
 𩗶 a suì
 𩗶 p suì
 𩗷 a yǎn
@@ -72845,7 +72878,7 @@
 𩭘 a xiū
 𩭘 p xiū
 𩭝 a wǒ
-𩭝 p wō
+𩭝 p wǒ
 𩭟 a dào
 𩭟 p dào
 𩭡 a xī
@@ -73795,7 +73828,6 @@
 𩿿 p chú
 𪀁 a gē
 𪀁 p gē
-𪀈 p yuān
 𪀉 a gē kě
 𪀉 p gē
 𪀊 a qú
@@ -75328,11 +75360,17 @@
 𪛒 a lián
 𪛒 p lián
 𪞝 p duó
+𪟝 p jì jī
 𪡈 p bái
 𪡏 p zhān
 𪢮 p luán
+𪣻 p lóu
+𪤗 p liào
 𪨊 p sóng
 𪨗 p juē
+𪨰 p qū
+𪨶 p shē
+𪩘 p yǎn
 𪪝 p yōng
 𪺹 p nǔ
 𪻐 p cōng
@@ -75341,8 +75379,11 @@
 𫂈 p fèi
 𫂙 p sù
 𫃜 p kòu
+𫄧 p yán
 𫄨 p chī
+𫄷 p yì
 𫄸 p xūn
+𫇭 p wěi
 𫈰 p qià
 𫋐 p gǒng
 𫌀 p jī
@@ -75350,41 +75391,195 @@
 𫍙 p yì
 𫍟 p yí
 𫍢 p náo
+𫍣 p tóng
+𫍯 p xián
 𫍰 p xǐ
 𫍲 p xiǎo
+𫍽 p xuān
 𫏋 p juē
 𫐄 p yuè
 𫐆 p kuài
 𫐉 p líng
 𫐐 p ní
-𫐓 p bù
+𫐓 p róu
+𫑡 p méng
 𫒶 p hán
 𫓧 p fū
 𫓩 p cōng
+𫓯 p jī
+𫓶 p xuān
+𫓹 p jī
+𫔍 p fán
 𫔎 p jué
+𫔶 p niè
+𫖮 p yǐ
+𫖯 p fǔ
+𫖳 p yūn
 𫗠 p zhāng
 𫗦 p bù
 𫗧 p sù
 𫗮 p huáng
 𫗴 p zhān
+𫘜 p wén
 𫘝 p jué
 𫘣 p hàn
 𫘤 p ái
+𫘦 p táo
+𫘧 p lù
 𫘨 p tí
+𫘪 p yuán
+𫘬 p xí
 𫚈 p xù
 𫚉 p hóng
 𫚒 p fú
 𫚔 p huí
 𫚕 p shī
+𫚖 p cǐ
 𫚙 p pū
+𫚭 p liè
 𫛛 p zhī
 𫛞 p jué
 𫛢 p níng
+𫛭 p kuáng
 𫛶 p chì
 𫛸 p tí
+𫜷 p shòu
+𫜸 p huà
+𫞩 p mén
+𫟅 p liáng
+𫟦 p suì
+𫟷 p lì
+𫟹 p hóng
+𫟼 p dá
+𫠆 p kuǐ
+𫠊 p xuán
+𫠜 p ní
+𫠥 p lòu
 𫡑 p yīn
+𫢸 p dàn
+𫫇 p è
+𫭟 p ōu
+𫭢 p lǔn
+𫭼 p láo
+𫮃 p shàn
+𫮬 p jiàng
+𫰛 p xíng
+𫵷 p lì
+𫶇 p dié
+𫷷 p xīn
+𫸩 p kōu
+𫼛 p diào
+𫽮 p dǎng
+𬀩 p wěi
+𬀪 p xiàn
+𬀷 p shāng
+𬂩 p jiā
+𬃊 p zhì
+𬆛 p nǎo
+𬇕 p wàn
+𬇙 p bèi
+𬇹 p guó
+𬉼 p ǒu
+𬊈 p xún
+𬊤 p chǎn
+𬌗 p hé
+𬍛 p lì
+𬍡 p dàng
+𬍤 p xún
+𬐚 p hǎi
+𬑔 p zhòng
+𬑡 p chǒu
+𬒈 p què
+𬒔 p gěng
+𬒗 p lán
+𬒘 p xìn
 𬓼 p tuí
+𬕂 p lǒng
+𬘓 p xún
+𬘘 p dǎn
+𬘡 p yīn
+𬘩 p tīng
+𬘫 p huán
+𬘬 p qiàn
 𬘭 p chēn
+𬘯 p zhǔn
+𬙂 p yǎn
+𬙊 p mò
+𬙋 p xiāng
+𬛸 p niē
+𬜬 p màn
+𬜯 p liǎng
+𬞟 p pín
+𬟁 p yì
+𬟽 p dōng
+𬣙 p xū
+𬣞 p zhǔ
+𬣡 p jiàn
+𬣳 p hěn
+𬤇 p yīn
+𬤊 p shì
+𬤝 p huì
 𬤥 p zhuàn
+𬨂 p qí
+𬨎 p yóu
+𬩽 p xún
+𬪩 p nóng
+𬬩 p yì
+𬬭 p lún
+𬬮 p chǎng
+𬬱 p jīn
+𬬸 p shù
+𬬹 p shén
+𬬻 p lú
+𬬿 p zhāo
+𬭁 p mǔ
+𬭊 p dù
+𬭎 p hóng
+𬭚 p chún
+𬭛 p bō
+𬭤 p hóu
+𬭩 p wēng
+𬭬 p huì
+𬭯 p piě
+𬭳 p xǐ
+𬭶 p hēi
+𬭸 p lín
+𬭼 p suì
+𬮱 p yīn
+𬮿 p gài
+𬯀 p jī
 𬯎 p tuí
+𬰃 p mù
+𬱖 p dí
+𬱟 p wěi
+𬲜 p chēng
+𬳲 p chǎn
+𬳵 p pī
+𬳶 p jiōng
+𬳽 p shēn
+𬳿 p tú
+𬴂 p fēi
+𬴃 p huō
+𬴊 p lín
+𬶋 p jū
+𬶍 p tuó
+𬶏 p wéi
+𬶐 p zhào
+𬶟 p là
+𬶠 p liàn
+𬶨 p jì
+𬶭 p jì
+𬶮 p xǐ
+𬷕 p bǔ
+𬸘 p yǎn
+𬸚 p yuè
 𬸣 p xiān
+𬸦 p zhuó
+𬸪 p fán
+𬹼 p xiè
+𬺈 p yǐ
+𬺓 p chǔ
+𭀖 p lí
+灰 p huī
+𰻝 p biáng
+𰻞 p biáng
