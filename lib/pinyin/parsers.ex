@@ -58,6 +58,14 @@ defmodule Pinyin.Parsers do
     ê o yo n ng wong m
   )
 
+  # Standalone finals that look like initial and final
+  # Must be parsed as final, otherwise conversion to zhuyin won't be correct.
+  # For example 吃 is chi where the i is not a final.
+  surprising_standalone_finals = ~w(
+    ci zi si
+    zhi chi shi  ri
+  )
+
   # Standalone finals which are not tone marked.
   #
   # These finals occur in the Unihan_Readings database, but are never marked with tones.
@@ -191,11 +199,13 @@ defmodule Pinyin.Parsers do
   initials_upper = Wordlist.allcaps(initials)
   combination_finals_upper = Wordlist.allcaps(combination_finals)
   standalone_finals_upper = Wordlist.allcaps(standalone_finals)
+  surprising_standalone_finals_upper = Wordlist.allcaps(surprising_standalone_finals)
   unmarked_finals_upper = Wordlist.allcaps(unmarked_finals)
 
   # Lowercase + capitalised:
   initials_mixed = Wordlist.mixed_caps(initials)
   standalone_finals_mixed = Wordlist.mixed_caps(standalone_finals)
+  surprising_standalone_finals_mixed = Wordlist.mixed_caps(surprising_standalone_finals)
   unmarked_finals_mixed = Wordlist.mixed_caps(unmarked_finals)
 
   # Marked versions of the pinyin tables:
@@ -203,12 +213,18 @@ defmodule Pinyin.Parsers do
   combination_finals_marked_upper = Wordlist.mark(combination_finals_upper)
   standalone_finals_marked_mixed = Wordlist.mark(standalone_finals_mixed)
   standalone_finals_marked_upper = Wordlist.mark(standalone_finals_upper)
+  surprising_standalone_finals_marked_mixed = Wordlist.mark(surprising_standalone_finals_mixed)
+  surprising_standalone_finals_marked_upper = Wordlist.mark(surprising_standalone_finals_upper)
 
   # Syllable Parsers
   # ----------------
 
   unmarked =
     choice([
+      Wordlist.merged_parser([
+        surprising_standalone_finals_mixed,
+        surprising_standalone_finals_upper
+      ]),
       Wordlist.concat_parser(initials_mixed, combination_finals),
       Wordlist.concat_parser(initials_upper, combination_finals_upper),
       Wordlist.merged_parser([
@@ -221,6 +237,10 @@ defmodule Pinyin.Parsers do
 
   marked =
     choice([
+      Wordlist.merged_parser([
+        surprising_standalone_finals_marked_mixed,
+        surprising_standalone_finals_marked_upper
+      ]),
       Wordlist.concat_parser(initials_mixed, combination_finals_marked),
       Wordlist.concat_parser(initials_upper, combination_finals_marked_upper),
       Wordlist.merged_parser([
