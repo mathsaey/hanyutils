@@ -48,7 +48,12 @@ defmodule Zhuyin.Parsers do
     ㄢ ㄣ ㄤ ㄥ
   )
 
-  initials_parser = Enum.concat(initials, standalone_initials) |> Wordlist.to_parser()
+  initials_parser =
+    choice([
+      initials |> Wordlist.to_parser(),
+      # Standalone initials can never be combined with the ㄧ final
+      standalone_initials |> Wordlist.to_parser() |> lookahead_not(string("ㄧ"))
+    ])
 
   standalone_initials_parser = standalone_initials |> Wordlist.to_parser()
 

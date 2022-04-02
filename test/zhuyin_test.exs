@@ -40,6 +40,20 @@ defmodule ZhuyinTest do
 
       Enum.each(tests, fn z -> assert Zhuyin.read(z) == {:error, z} end)
     end
+
+    test "Standalone initials" do
+      # First a regular syllable
+      {:ok, [%Zhuyin{initial: "ㄋ", final: "ㄧ", tone: 3}], "", %{}, {1, 0}, 8} =
+        Zhuyin.Parsers.syllable("ㄋㄧˇ")
+
+      # Must not allow standalone initials be combined with a final
+      assert {:error, "expected end of string", "ㄧˇ", %{}, {1, 0}, 3} ==
+               Zhuyin.Parsers.syllable("ㄕㄧˇ")
+
+      # That can only be parsed if we allow multiple words
+      assert {:ok, [~z/ㄕ/, ~z/ㄧˇ/] |> List.flatten(), "", %{}, {1, 0}, 8} ==
+               Zhuyin.Parsers.zhuyin_only("ㄕㄧˇ")
+    end
   end
 
   describe "Syllable parser" do
