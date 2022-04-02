@@ -145,7 +145,7 @@ defmodule Zhuyin do
     "ㄩㄣ" => "vn"
   }
 
-  @spec to_pinyin(t()) :: Pinyin.t()
+  @spec to_pinyin(t() | zhuyin_list()) :: Pinyin.t()
   # Special case for this final and tone combination
   def to_pinyin(%Zhuyin{initial: "", final: "ㄦ", tone: 0}) do
     %Pinyin{initial: "", final: "r", tone: "0"}

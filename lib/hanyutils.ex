@@ -96,12 +96,13 @@ defmodule Hanyutils do
       "ㄋㄧˇ[ ㄏㄠˇ | ㄏㄠˋ ]"
 
   """
-  # @spec to_zhuyin(String.t(), (Hanzi.t() -> Pinyin.pinyin_list())) :: String.t()
+  @spec to_zhuyin(String.t(), (Hanzi.t() -> Pinyin.pinyin_list())) :: String.t()
   def to_zhuyin(string, converter \\ &Hanzi.common_pronunciation/1) do
     string
     |> Hanzi.read()
     |> Hanzi.to_pinyin(converter)
     |> Zhuyin.from_pinyin()
+    |> to_string()
   end
 
   @doc """
