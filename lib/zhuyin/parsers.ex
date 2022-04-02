@@ -1,4 +1,7 @@
 defmodule Zhuyin.Parsers do
+  @moduledoc false
+  # Parsing logic for Zhuyin strings
+
   import NimbleParsec
   alias Pinyin.Parsers.Utils, as: Utils
   alias Pinyin.Parsers.Wordlist, as: Wordlist

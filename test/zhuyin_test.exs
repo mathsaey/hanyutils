@@ -1,7 +1,6 @@
 defmodule ZhuyinTest do
   use ExUnit.Case
   import Zhuyin
-  import Zhuyin.Parsers
   import Pinyin
   doctest Zhuyin
 
@@ -26,6 +25,8 @@ defmodule ZhuyinTest do
         {"ㄌㄩㄢˋ", ~p/lvan4/},
         {"ㄌㄢˇ", ~p/lan3/},
         {"ㄦˊ", ~p/er2/}
+        # Pinyin parser can't parse r right now.
+        # ㄦ/兒 in first tone is just "r" in pinyin
         # {"ㄦ˙", ~p/r0/}
       ]
 

@@ -5,8 +5,8 @@ defmodule Zhuyin do
   The main goal of this module is to provide functions to manipulate strings that contain zhuyin
   words, which are potentially mixed with other content. These strings are represented by the
   `t:zhuyin_list/0` type. Zhuyin lists can be obtained by parsing a string with the `read/2`,
-  `read!/2` or `sigil_z/2` functions, or by using `Hanzi.to_zhuyin/2`. Afterwards, these lists can
-  be converted into a string representation by using `to_string/1`n.
+  `read!/2` or `sigil_z/2` functions. Afterwards, these lists can be converted into astring
+  representation by using `to_string/1`n.
 
   A `t:zhuyin_list/0` is a list which contains strings and zhuyin structs (`t:t/0`). These structs
   are used to encode zhuyin syllables; they can be created directly through the use of the
@@ -35,7 +35,7 @@ defmodule Zhuyin do
 
   def zhuyin_tones, do: ["˙", "", "ˊ", "ˇ", "ˋ"]
 
-  def tone_index(tone_char) do
+  defp tone_index(tone_char) do
     Enum.find_index(zhuyin_tones(), &(&1 == tone_char))
   end
 
@@ -145,7 +145,19 @@ defmodule Zhuyin do
     "ㄩㄣ" => "vn"
   }
 
-  @spec to_pinyin(t() | zhuyin_list()) :: Pinyin.t()
+  @doc """
+  Create a pinyin struct from a zhuyin struct or list.
+
+  ## Examples
+
+      iex> Zhuyin.to_pinyin(~z/ㄋㄧˇㄏㄠˇ/)
+      ~p/nǐhǎo/
+
+      iex> Zhuyin.to_pinyin(%Zhuyin{initial: "ㄋ", final: "ㄧ", tone: 3})
+      %Pinyin{initial: "n", final: "i", tone: 3}
+
+  """
+  @spec to_pinyin(t() | zhuyin_list()) :: Pinyin.t() | Pinyin.pinyin_list()
   # Special case for this final and tone combination
   def to_pinyin(%Zhuyin{initial: "", final: "ㄦ", tone: 0}) do
     %Pinyin{initial: "", final: "r", tone: "0"}
@@ -172,6 +184,18 @@ defmodule Zhuyin do
     end)
   end
 
+  @doc """
+  Create a pinyin struct from a zhuyin struct or list.
+
+  ## Examples
+
+      iex> Zhuyin.from_pinyin(~p/nǐhǎo/)
+      ~z/ㄋㄧˇㄏㄠˇ/
+
+      iex> Zhuyin.from_pinyin(%Pinyin{initial: "n", final: "i", tone: 3})
+      %Zhuyin{initial: "ㄋ", final: "ㄧ", tone: 3}
+
+  """
   @spec from_pinyin(Pinyin.t() | Pinyin.pinyin_list()) :: t()
   def from_pinyin(pinyin = %Pinyin{}) do
     initial_map = Map.new(@initials, fn {key, val} -> {val, key} end)
@@ -195,7 +219,6 @@ defmodule Zhuyin do
       p = %Pinyin{} -> from_pinyin(p)
       str when is_binary(str) -> str
     end)
-    |> Enum.join()
   end
 
   def create(initial, final, tone) do
@@ -338,6 +361,7 @@ defimpl String.Chars, for: Zhuyin do
 end
 
 defimpl List.Chars, for: Zhuyin do
+  @spec to_charlist(Zhuyin.t()) :: charlist()
   def to_charlist(p = %Zhuyin{}) do
     Kernel.to_charlist(to_string(p))
   end

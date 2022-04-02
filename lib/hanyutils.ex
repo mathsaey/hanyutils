@@ -102,6 +102,7 @@ defmodule Hanyutils do
     |> Hanzi.read()
     |> Hanzi.to_pinyin(converter)
     |> Zhuyin.from_pinyin()
+    |> Enum.join()
     |> to_string()
   end
 
@@ -189,6 +190,7 @@ defmodule Hanyutils do
     string
     |> Pinyin.read!(:words)
     |> Zhuyin.from_pinyin()
+    |> Enum.join()
     |> to_string()
   end
 
