@@ -11,8 +11,7 @@ defmodule ZhuyinTest do
         {"ㄐㄩ˙", ~p/jv/},
         {"ㄌㄩˇ", ~p/lv3/},
         {"ㄓㄠˊ", ~p/zhao2/},
-        # There's a bug in the Pinyin implementation that parses zhi as zh+i
-        {"ㄓˋ", [%Pinyin{initial: "", final: "zhi", tone: 4}]},
+        {"ㄓˋ", ~p/zhi4/},
         {"ㄌㄥ", ~p/leng1/},
         {"ㄕㄨㄟˇ", ~p/shui3/},
         {"ㄌㄧㄡˊ", ~p/liu2/},
