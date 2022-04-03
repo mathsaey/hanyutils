@@ -11,7 +11,7 @@
 # The Unihan_Readings.txt file can be found inside a zip archive that can be download here:
 # https://www.unicode.org/Public/UCD/latest/ucd/Unihan.zip.
 # Documentation for this file can be found here:
-# http://www.unicode.org/reports/tr38/tr38.html
+# https://www.unicode.org/reports/tr38/
 
 # The Hanzi module expects a file with the following layout:
 # - Any line that is not an entry is empty or starts with #
