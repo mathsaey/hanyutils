@@ -58,7 +58,8 @@ defmodule Pinyin.Parsers do
     ê o yo n ng wong m
   )
 
-  # Standalone finals that look like initial and final
+  # Standalone finals that look like initial and final - unlike list of
+  # standalone finals above, which are each unique.
   # Must be parsed as final, otherwise conversion to zhuyin won't be correct.
   # For example 吃 is chi where the i is not a final.
   surprising_standalone_finals = ~w(

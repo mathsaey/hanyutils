@@ -84,7 +84,7 @@ defmodule Pinyin do
   defp parser_result!({:error, _, rem, %{}, _, _}), do: raise(ParseError, rem)
 
   @doc """
-  Create a pinyin struct (`t:t/0`) from a string with tone marks.
+  Create a single pinyin struct (`t:t/0`) from a string with tone marks.
 
   This function can only be used to parse a single pinyin syllable (e.g. "nǐ", not "nǐhǎo"). If
   parsing fails, an `{:error, <remainder of string>}` is returned, `<remainder of string>`
@@ -110,7 +110,7 @@ defmodule Pinyin do
   end
 
   @doc """
-  Create a pinyin struct (`t:t/0`) from a string with tone marks.
+  Create a single pinyin struct (`t:t/0`) from a string with tone marks.
 
   Like `from_marked/1`, but returns the result or raises an exception if an error occurred while
   parsing.
@@ -130,7 +130,7 @@ defmodule Pinyin do
   def from_marked!(word), do: word |> Parsers.marked_syllable() |> parser_result!() |> hd()
 
   @doc """
-  Create a pinyin struct (`t:t/0`) from a string with a tone number.
+  Create a single pinyin struct (`t:t/0`) from a string with a tone number.
 
   This function can only be used to parse a single pinyin syllable (e.g. "ni3", not "ni3hao3"),
   no whitespace may be present between the pinyin syllable and the tone marker. The tone marker
@@ -162,7 +162,7 @@ defmodule Pinyin do
   end
 
   @doc """
-  Create a pinyin struct (`t:t/0`) from a string with a tone number.
+  Create a single pinyin struct (`t:t/0`) from a string with a tone number.
 
   Like `from_numbered/1`, but returns the result or raises an exception if an error occurred while
   parsing.
@@ -185,7 +185,7 @@ defmodule Pinyin do
   def from_numbered!(word), do: word |> Parsers.numbered_syllable() |> parser_result!() |> hd()
 
   @doc """
-  Create a pinyin struct (`t:t/0`) from a string.
+  Create a single pinyin struct (`t:t/0`) from a string.
 
   This function can be used to parse a single pinyin syllable which is marked or which has a tone
   number. It combines the functionality of `from_marked/1` and `from_numbered/1`.The limitations
@@ -217,7 +217,7 @@ defmodule Pinyin do
   end
 
   @doc """
-  Create a pinyin struct (`t:t/0`) from a string.
+  Create a single pinyin struct (`t:t/0`) from a string.
 
   Like `from_string/1`, but returns the result or raises an exception if an error occurred while
   parsing.
