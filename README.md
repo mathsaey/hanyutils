@@ -76,11 +76,6 @@ iex> Hanyutils.zhuyin_to_numbered("ㄋㄧˇㄏㄠˇ")
 
 iex> Hanyutils.zhuyin_to_marked("ㄋㄧˇㄏㄠˇ")
 "nǐhǎo"
-
-iex> Hanyutils.pinyin_to_zhuyin("nǐhǎo")
-"ㄋㄧˇㄏㄠˇ"
-
-iex> Hanyutils.pinyin_to_zhuyin("ni3hao3")
 "ㄋㄧˇㄏㄠˇ"
 
 iex> Hanyutils.pinyin_to_zhuyin("ni3hǎo")

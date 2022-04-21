@@ -29,12 +29,6 @@ defmodule Hanyutils do
       iex> Hanyutils.zhuyin_to_marked("ㄋㄧˇㄏㄠˇ")
       "nǐhǎo"
 
-      iex> Hanyutils.pinyin_to_zhuyin("nǐhǎo")
-      "ㄋㄧˇㄏㄠˇ"
-
-      iex> Hanyutils.pinyin_to_zhuyin("ni3hao3")
-      "ㄋㄧˇㄏㄠˇ"
-
       iex> Hanyutils.pinyin_to_zhuyin("ni3hǎo")
       "ㄋㄧˇㄏㄠˇ"
 
@@ -50,7 +44,8 @@ defmodule Hanyutils do
         |> Pinyin.marked()
       end
 
-  Please refer to the documentation of the `Hanzi`, `Pinyin`, and `Zhuyin` modules for more information.
+  Please refer to the documentation of the `Hanzi`, `Pinyin`, and `Zhuyin` modules for more
+  information.
   """
 
   defdelegate characters?(c), to: Hanzi
@@ -151,7 +146,7 @@ defmodule Hanyutils do
   Convert a string with marked Pinyin to numbered Pinyin.
 
   Parses the input using `Pinyin.read!/1` (in `:words` mode), and converts the result with
-  `Pinyin.numbered/1`. Please refer to the documentation of `Pinyin.read/2` if you required
+  `Pinyin.numbered/1`. Please refer to the documentation of `Pinyin.read/2` if you require
   details on how the input is parsed. It is worth noting that the `Pinyin.read/2` parser is
   sensitive to the location of the tone marker.
 
@@ -169,10 +164,10 @@ defmodule Hanyutils do
   end
 
   @doc """
-  Convert a string with marked Pinyin to Zhuyin
+  Convert a string with Pinyin to Zhuyin
 
   Parses the input using `Pinyin.read!/1` (in `:words` mode), and converts the result with
-  `Pinyin.numbered/1`. Please refer to the documentation of `Pinyin.read/2` if you required
+  `Zhuyin.from_pinyin/1`. Please refer to the documentation of `Pinyin.read/2` if you require
   details on how the input is parsed. It is worth noting that the `Pinyin.read/2` parser is
   sensitive to the location of the tone marker.
 

@@ -146,7 +146,7 @@ defmodule Zhuyin do
   }
 
   @doc """
-  Create a pinyin struct from a zhuyin struct or list.
+  Create pinyin structs from a zhuyin struct or list.
 
   ## Examples
 
@@ -185,7 +185,7 @@ defmodule Zhuyin do
   end
 
   @doc """
-  Create a pinyin struct from a zhuyin struct or list.
+  Create zhuyin structs from a pinyin struct or list.
 
   ## Examples
 
@@ -262,7 +262,7 @@ defmodule Zhuyin do
   defp parser_result!({:error, _, rem, %{}, _, _}), do: raise(ParseError, rem)
 
   @doc """
-  Create a zhuyin struct (`t:t/0`) from a string.
+  Create a single zhuyin struct (`t:t/0`) from a string.
 
   This function can be used to parse a single zhuyin syllable.
 
@@ -289,7 +289,7 @@ defmodule Zhuyin do
   end
 
   @doc """
-  Create a zhuyin struct (`t:t/0`) from a string.
+  Create a single zhuyin struct (`t:t/0`) from a string.
 
   Like `from_string/1`, but returns the result or raises an exception if an error occurred while
   parsing.
