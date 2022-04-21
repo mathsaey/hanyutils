@@ -72,6 +72,7 @@ defmodule Zhuyin do
     "ㄘ" => "c",
     "ㄙ" => "s"
   }
+  @reverse_initials Map.new(@initials, fn {key, val} -> {val, key} end)
 
   # In pinyin standalone finals are spelled differently than when they are
   # combined with an initial
@@ -111,6 +112,7 @@ defmodule Zhuyin do
     "ㄦ" => "er",
     "ㄢ" => "an"
   }
+  @reverse_standalone_finals Map.new(@standalone_finals, fn {key, val} -> {val, key} end)
 
   @finals %{
     "ㄧ" => "i",
@@ -150,6 +152,7 @@ defmodule Zhuyin do
     "ㄨㄣ" => "un",
     "ㄩㄣ" => "vn"
   }
+  @reverse_finals Map.new(@finals, fn {key, val} -> {val, key} end)
 
   @doc """
   Create pinyin structs from a zhuyin struct or list.
@@ -204,16 +207,13 @@ defmodule Zhuyin do
   """
   @spec from_pinyin(Pinyin.t() | Pinyin.pinyin_list()) :: t()
   def from_pinyin(pinyin = %Pinyin{}) do
-    initial_map = Map.new(@initials, fn {key, val} -> {val, key} end)
-    initial = Map.get(initial_map, pinyin.initial, "")
+    initial = Map.get(@reverse_initials, pinyin.initial, "")
 
     final =
       if pinyin.initial == "" do
-        standalone_finals_map = Map.new(@standalone_finals, fn {key, val} -> {val, key} end)
-        standalone_finals_map[pinyin.final]
+        @reverse_standalone_finals[pinyin.final]
       else
-        finals_map = Map.new(@finals, fn {key, val} -> {val, key} end)
-        finals_map[pinyin.final]
+        @reverse_finals[pinyin.final]
       end
 
     %__MODULE__{initial: initial, final: final, tone: pinyin.tone}
