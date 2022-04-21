@@ -23,10 +23,10 @@ defmodule Hanyutils do
       iex> Hanyutils.number_pinyin("nǐhǎo")
       "ni3hao3"
 
-      iex> Hanyutils.zhuyin_to_numbered("ㄋㄧˇㄏㄠˇ")
+      iex> Hanyutils.zhuyin_to_numbered_pinyin("ㄋㄧˇㄏㄠˇ")
       "ni3hao3"
 
-      iex> Hanyutils.zhuyin_to_marked("ㄋㄧˇㄏㄠˇ")
+      iex> Hanyutils.zhuyin_to_marked_pinyin("ㄋㄧˇㄏㄠˇ")
       "nǐhǎo"
 
       iex> Hanyutils.pinyin_to_zhuyin("ni3hǎo")
@@ -198,15 +198,15 @@ defmodule Hanyutils do
 
   ## Examples
 
-      iex> Hanyutils.zhuyin_to_marked("ㄋㄧˇㄏㄠˇ")
+      iex> Hanyutils.zhuyin_to_marked_pinyin("ㄋㄧˇㄏㄠˇ")
       "nǐhǎo"
 
-      iex> Hanyutils.zhuyin_to_marked("ㄓㄨㄩˇㄔㄣˊ")
+      iex> Hanyutils.zhuyin_to_marked_pinyin("ㄓㄨㄩˇㄔㄣˊ")
       "zhūyǔchén"
 
   """
-  @spec zhuyin_to_marked(String.t()) :: String.t()
-  def zhuyin_to_marked(string) do
+  @spec zhuyin_to_marked_pinyin(String.t()) :: String.t()
+  def zhuyin_to_marked_pinyin(string) do
     string
     |> Zhuyin.read!(:words)
     |> Zhuyin.to_pinyin()
@@ -222,15 +222,15 @@ defmodule Hanyutils do
 
   ## Examples
 
-      iex> Hanyutils.zhuyin_to_numbered("ㄋㄧˇㄏㄠˇ")
+      iex> Hanyutils.zhuyin_to_numbered_pinyin("ㄋㄧˇㄏㄠˇ")
       "ni3hao3"
 
-      iex> Hanyutils.zhuyin_to_numbered("ㄓㄨㄩˇㄔㄣˊ")
+      iex> Hanyutils.zhuyin_to_numbered_pinyin("ㄓㄨㄩˇㄔㄣˊ")
       "zhu1yu3chen2"
 
   """
-  @spec zhuyin_to_numbered(String.t()) :: String.t()
-  def zhuyin_to_numbered(string) do
+  @spec zhuyin_to_numbered_pinyin(String.t()) :: String.t()
+  def zhuyin_to_numbered_pinyin(string) do
     string
     |> Zhuyin.read!(:words)
     |> Zhuyin.to_pinyin()
