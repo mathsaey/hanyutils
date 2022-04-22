@@ -33,15 +33,16 @@ defmodule Zhuyin do
   """
   @type zhuyin_list :: [t() | String.t()]
 
-  def zhuyin_tones, do: ["˙", "", "ˊ", "ˇ", "ˋ"]
-  zhuyin_tones_var = ["˙", "", "ˊ", "ˇ", "ˋ"]
+  # Ordered by which tone number they correspond to
+  zhuyin_tones = ["˙", "", "ˊ", "ˇ", "ˋ"]
+  def zhuyin_tones, do: unquote(zhuyin_tones)
 
   # Function to get the tone number of a standalone tone marker.
   # All valid function invocations are generated at compile time.
   @spec tone_index(String.t()) :: 0..4
   defp tone_index(tone_char)
 
-  for {marker, idx} <- Enum.with_index(zhuyin_tones_var, 0) do
+  for {marker, idx} <- Enum.with_index(zhuyin_tones, 0) do
     defp tone_index(unquote(marker)), do: unquote(idx)
   end
 
