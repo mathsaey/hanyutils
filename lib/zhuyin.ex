@@ -174,16 +174,11 @@ defmodule Zhuyin do
   end
 
   def to_pinyin(zhuyin = %Zhuyin{}) do
-    pinyin_initial = Map.get(@initials, zhuyin.initial, "")
-
-    pinyin_final =
-      if zhuyin.initial == "" do
-        @standalone_finals[zhuyin.final]
-      else
-        @finals[zhuyin.final]
-      end
-
-    %Pinyin{initial: pinyin_initial, final: pinyin_final, tone: zhuyin.tone}
+    if initial = @initials[zhuyin.initial] do
+      %Pinyin{initial: initial, final: @finals[zhuyin.final], tone: zhuyin.tone}
+    else
+      %Pinyin{initial: "", final: @standalone_finals[zhuyin.final], tone: zhuyin.tone}
+    end
   end
 
   def to_pinyin(list) when is_list(list) do
@@ -208,16 +203,11 @@ defmodule Zhuyin do
   """
   @spec from_pinyin(Pinyin.t() | Pinyin.pinyin_list()) :: t()
   def from_pinyin(pinyin = %Pinyin{}) do
-    initial = Map.get(@reverse_initials, pinyin.initial, "")
-
-    final =
-      if pinyin.initial == "" do
-        @reverse_standalone_finals[pinyin.final]
-      else
-        @reverse_finals[pinyin.final]
-      end
-
-    %__MODULE__{initial: initial, final: final, tone: pinyin.tone}
+    if initial = @reverse_initials[pinyin.initial] do
+      %__MODULE__{initial: initial, final: @reverse_finals[pinyin.final], tone: pinyin.tone}
+    else
+      %__MODULE__{initial: "", final: @reverse_standalone_finals[pinyin.final], tone: pinyin.tone}
+    end
   end
 
   def from_pinyin(list) when is_list(list) do
