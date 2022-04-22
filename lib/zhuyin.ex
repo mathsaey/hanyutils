@@ -195,7 +195,7 @@ defmodule Zhuyin do
   ## Examples
 
       iex> Zhuyin.from_pinyin(~p/nǐhǎo/)
-      ~z/ㄋㄧˇㄏㄠˇ/
+      [%Zhuyin{initial: "ㄋ", final: "ㄧ", tone: 3}, %Zhuyin{initial: "ㄏ", final: "ㄠ", tone: 3}]
 
       iex> Zhuyin.from_pinyin(%Pinyin{initial: "n", final: "i", tone: 3})
       %Zhuyin{initial: "ㄋ", final: "ㄧ", tone: 3}
