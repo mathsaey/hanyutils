@@ -168,10 +168,6 @@ defmodule Zhuyin do
 
   """
   @spec to_pinyin(t() | zhuyin_list()) :: Pinyin.t() | Pinyin.pinyin_list()
-  # Special case for this final and tone combination
-  def to_pinyin(%Zhuyin{initial: "", final: "ㄦ", tone: 0}) do
-    %Pinyin{initial: "", final: "r", tone: "0"}
-  end
 
   def to_pinyin(zhuyin = %Zhuyin{}) do
     if initial = @initials[zhuyin.initial] do
