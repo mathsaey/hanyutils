@@ -135,10 +135,10 @@ defmodule Hanyutils do
       "nǐhǎo"
 
   """
-  @spec mark_pinyin(String.t()) :: String.t()
-  def mark_pinyin(string) do
+  @spec mark_pinyin(String.t(), :exclusive | :words | :mixed) :: String.t()
+  def mark_pinyin(string, mode \\ :words) when mode in [:exclusive, :words, :mixed] do
     string
-    |> Pinyin.read!(:words)
+    |> Pinyin.read!(mode)
     |> Pinyin.marked()
   end
 
@@ -156,10 +156,10 @@ defmodule Hanyutils do
       "ni3hao3"
 
   """
-  @spec number_pinyin(String.t()) :: String.t()
-  def number_pinyin(string) do
+  @spec number_pinyin(String.t(), :exclusive | :words | :mixed) :: String.t()
+  def number_pinyin(string, mode \\ :words) when mode in [:exclusive, :words, :mixed] do
     string
-    |> Pinyin.read!(:words)
+    |> Pinyin.read!(mode)
     |> Pinyin.numbered()
   end
 
@@ -180,10 +180,10 @@ defmodule Hanyutils do
       "ㄓㄨㄩˇㄔㄣˊ"
 
   """
-  @spec pinyin_to_zhuyin(String.t()) :: String.t()
-  def pinyin_to_zhuyin(string) do
+  @spec pinyin_to_zhuyin(String.t(), :exclusive | :words | :mixed) :: String.t()
+  def pinyin_to_zhuyin(string, mode \\ :words) when mode in [:exclusive, :words, :mixed] do
     string
-    |> Pinyin.read!(:words)
+    |> Pinyin.read!(mode)
     |> Zhuyin.from_pinyin()
     |> Enum.join()
     |> to_string()
@@ -205,10 +205,10 @@ defmodule Hanyutils do
       "zhūyǔchén"
 
   """
-  @spec zhuyin_to_marked_pinyin(String.t()) :: String.t()
-  def zhuyin_to_marked_pinyin(string) do
+  @spec zhuyin_to_marked_pinyin(String.t(), :exclusive | :words | :mixed) :: String.t()
+  def zhuyin_to_marked_pinyin(string, mode \\ :words) when mode in [:exclusive, :words, :mixed] do
     string
-    |> Zhuyin.read!(:words)
+    |> Zhuyin.read!(mode)
     |> Zhuyin.to_pinyin()
     |> Pinyin.marked()
   end
@@ -229,10 +229,11 @@ defmodule Hanyutils do
       "zhu1yu3chen2"
 
   """
-  @spec zhuyin_to_numbered_pinyin(String.t()) :: String.t()
-  def zhuyin_to_numbered_pinyin(string) do
+  @spec zhuyin_to_numbered_pinyin(String.t(), :exclusive | :words | :mixed) :: String.t()
+  def zhuyin_to_numbered_pinyin(string, mode \\ :words)
+      when mode in [:exclusive, :words, :mixed] do
     string
-    |> Zhuyin.read!(:words)
+    |> Zhuyin.read!(mode)
     |> Zhuyin.to_pinyin()
     |> Pinyin.numbered()
   end
