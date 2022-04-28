@@ -32,9 +32,9 @@ defmodule Hanyutils do
       iex> Hanyutils.pinyin_to_zhuyin("ni3hǎo")
       "ㄋㄧˇㄏㄠˇ"
 
-  All of these functions are built based on the functionality found in the `Hanzi` and `Pinyin`
-  modules. If this module does not contain the required functionality you need, it is possible it
-  can be built manually based on the abstractions in these modules. For instance, the
+  All of these functions are built based on the functionality found in the `Hanzi`, `Pinyin` and
+  `Zhuyin` modules. If this module does not contain the required functionality you need, it is
+  possible it can be built manually based on the abstractions in these modules. For instance, the
   `to_marked_pinyin` function could be implemented as follows:
 
       def to_marked_pinyin(string) do
@@ -126,9 +126,9 @@ defmodule Hanyutils do
   @doc """
   Convert a string with numbered Pinyin to marked Pinyin.
 
-  Parses the input using `Pinyin.read!/1` (in `:words` mode), and converts the result with
-  `Pinyin.marked/1`. Please refer to the documentation of `Pinyin.read/2` if you required details
-  on how the input is parsed.
+  Parses the input using `Pinyin.read!/2` and converts the result with `Pinyin.marked/1`. Please
+  refer to the documentation of `Pinyin.read/2` if you required details on how the input is
+  parsed. If no mode is provided, `:words` mode is used by default.
 
   ## Examples
 
@@ -146,10 +146,10 @@ defmodule Hanyutils do
   @doc """
   Convert a string with marked Pinyin to numbered Pinyin.
 
-  Parses the input using `Pinyin.read!/1` (in `:words` mode), and converts the result with
-  `Pinyin.numbered/1`. Please refer to the documentation of `Pinyin.read/2` if you require details
-  on how the input is parsed. It is worth noting that the `Pinyin.read/2` parser is sensitive to
-  the location of the tone marker.
+  Parses the input using `Pinyin.read!/2`, and converts the result with `Pinyin.numbered/1`.
+  Please refer to the documentation of `Pinyin.read/2` if you require details on how the input is
+  parsed. It is worth noting that the `Pinyin.read/2` parser is sensitive to the location of the
+  tone marker. `Pinyin.read!/2` is called in `:words` mode if no mode is provided.
 
   ## Examples
 
@@ -167,10 +167,10 @@ defmodule Hanyutils do
   @doc """
   Convert a string with Pinyin to Zhuyin
 
-  Parses the input using `Pinyin.read!/1` (in `:words` mode), and converts the result with
-  `Zhuyin.from_pinyin/1`. Please refer to the documentation of `Pinyin.read/2` if you require
-  details on how the input is parsed. It is worth noting that the `Pinyin.read/2` parser is
-  sensitive to the location of the tone marker.
+  Parses the input using `Pinyin.read!/2`, and converts the result with `Zhuyin.from_pinyin/1`.
+  Please refer to the documentation of `Pinyin.read/2` if you require details on how the input is
+  parsed. It is worth noting that the `Pinyin.read/2` parser is sensitive to the location of the
+  tone marker. `Pinyin.read!/2` is called in `:words` mode if no mode is provided.
 
   ## Examples
 
@@ -195,7 +195,8 @@ defmodule Hanyutils do
 
   Parses the input using `Zhuyin.read!/2`, and converts the result with `Pinyin.numbered/1`.
   Please refer to the documentation of `Zhuyin.read/2` if you require details on how the input is
-  parsed or on the `mode` argument.
+  parsed or on the `mode` argument. `Zhuyin.read!/2` is called in `:words` mode if no mode is
+  provided.
 
   ## Examples
 
@@ -219,7 +220,8 @@ defmodule Hanyutils do
 
   Parses the input using `Zhuyin.read!/2`, and converts the result with `Pinyin.numbered/1`.
   Please refer to the documentation of `Zhuyin.read/2` if you require information on how the input
-  is parsed or on the `mode` argument.
+  is parsed or on the `mode` argument. `Zhuyin.read!/2` is called in `:words` mode if no mode is
+  provided.
 
   ## Examples
 
