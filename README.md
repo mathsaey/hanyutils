@@ -71,10 +71,10 @@ iex> Hanyutils.mark_pinyin("ni3hao3")
 iex> Hanyutils.number_pinyin("nǐhǎo")
 "ni3hao3"
 
-iex> Hanyutils.zhuyin_to_numbered("ㄋㄧˇㄏㄠˇ")
+iex> Hanyutils.zhuyin_to_numbered_pinyin("ㄋㄧˇㄏㄠˇ")
 "ni3hao3"
 
-iex> Hanyutils.zhuyin_to_marked("ㄋㄧˇㄏㄠˇ")
+iex> Hanyutils.zhuyin_to_marked_pinyin("ㄋㄧˇㄏㄠˇ")
 "nǐhǎo"
 "ㄋㄧˇㄏㄠˇ"
 
