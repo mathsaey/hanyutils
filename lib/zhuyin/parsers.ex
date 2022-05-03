@@ -15,7 +15,7 @@ defmodule Zhuyin.Parsers do
   @spec tone_index(String.t()) :: 0..4
   defp tone_index(tone_char)
 
-  for {marker, idx} <- Enum.with_index(Zhuyin.zhuyin_tones(), 0) do
+  for {marker, idx} <- Enum.with_index(Zhuyin._zhuyin_tones(), 0) do
     defp tone_index(unquote(marker)), do: unquote(idx)
   end
 
