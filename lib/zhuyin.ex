@@ -37,15 +37,6 @@ defmodule Zhuyin do
   zhuyin_tones = ["˙", "", "ˊ", "ˇ", "ˋ"]
   def zhuyin_tones, do: unquote(zhuyin_tones)
 
-  # Function to get the tone number of a standalone tone marker.
-  # All valid function invocations are generated at compile time.
-  @spec tone_index(String.t()) :: 0..4
-  defp tone_index(tone_char)
-
-  for {marker, idx} <- Enum.with_index(zhuyin_tones, 0) do
-    defp tone_index(unquote(marker)), do: unquote(idx)
-  end
-
   # ------------------------- #
   # Pinyin Mapping / Creation #
   # ------------------------- #
@@ -211,14 +202,6 @@ defmodule Zhuyin do
       p = %Pinyin{} -> from_pinyin(p)
       str when is_binary(str) -> str
     end)
-  end
-
-  def create(initial, final, tone) do
-    %__MODULE__{initial: initial, final: final, tone: tone_index(tone)}
-  end
-
-  def create(final, tone) do
-    %__MODULE__{final: final, tone: tone_index(tone)}
   end
 
   @spec read(String.t(), :exclusive | :words | :mixed) ::
