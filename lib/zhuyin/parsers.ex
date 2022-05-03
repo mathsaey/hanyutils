@@ -68,13 +68,8 @@ defmodule Zhuyin.Parsers do
 
   tone_parser = zhuyin_tones |> Wordlist.to_parser()
 
-  defp to_zhuyin([initial, final, tone]) do
-    Zhuyin.create(initial, final, tone)
-  end
-
-  defp to_zhuyin([final, tone]) do
-    Zhuyin.create(final, tone)
-  end
+  defp to_zhuyin([initial, final, tone]), do: Zhuyin.create(initial, final, tone)
+  defp to_zhuyin([final, tone]), do: Zhuyin.create(final, tone)
 
   syllable_parser =
     choice([
