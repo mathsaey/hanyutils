@@ -280,14 +280,14 @@ defmodule Zhuyin do
 
   ## Examples
 
-      #iex> Zhuyin.from_string("ㄋㄧˇ")
-      #%Zhuyin{initial: "ㄋ", final: "ㄧ", tone: 3}}
+      iex> Zhuyin.from_string!("ㄋㄧˇ")
+      %Zhuyin{initial: "ㄋ", final: "ㄧ", tone: 3}
 
-      #iex> Zhuyin.from_string("ㄋㄧˇㄏㄠˇ")
-      ##** (ParseError) Error occurred when attempting to parse: "ㄋㄧˇㄏㄠˇ"
+      iex> Zhuyin.from_string!("ㄋㄧˇㄏㄠˇ")
+      ** (ParseError) Error occurred when attempting to parse: "ㄏㄠˇ"
 
-      #iex> Zhuyin.from_string("ㄋㄧˇhǎo")
-      ##** (ParseError) Error occurred when attempting to parse: "ㄋㄧˇhǎo"
+      iex> Zhuyin.from_string!("ㄋㄧˇhǎo")
+      ** (ParseError) Error occurred when attempting to parse: "hǎo"
   """
   @spec from_string!(String.t()) :: t() | no_return()
   def from_string!(word), do: word |> Parsers.syllable() |> parser_result!() |> hd()
@@ -307,14 +307,14 @@ defmodule Zhuyin do
       iex> ~z/ㄋㄧˇ/
       [%Zhuyin{tone: 3, initial: "ㄋ", final: "ㄧ"}]
 
-      #iex> ~z/ㄋㄧˇ hello/w
-      #[%Zhuyin{tone: 3, initial: "ㄋ", final: "ㄧ"}, " ", "hello"]
+      iex> ~z/ㄋㄧˇ hello/w
+      [%Zhuyin{tone: 3, initial: "ㄋ", final: "ㄧ"}, " ", "hello"]
 
-      #iex> ~z/ㄋㄧˇ好/m
-      #[%Zhuyin{tone: 3, initial: "ㄋ", final: "ㄧ"}, "好"]
+      iex> ~z/ㄋㄧˇ好/m
+      [%Zhuyin{tone: 3, initial: "ㄋ", final: "ㄧ"}, "好"]
 
-      #iex> ~z/ㄋㄧˇ/s
-      #%Zhuyin{tone: 3, initial: "ㄋ", final: "ㄧ"}
+      iex> ~z/ㄋㄧˇ/s
+      %Zhuyin{tone: 3, initial: "ㄋ", final: "ㄧ"}
 
   """
   defmacro sigil_z({:<<>>, _, [word]}, [?s]) when is_binary(word) do
