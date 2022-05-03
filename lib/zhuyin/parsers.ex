@@ -77,7 +77,7 @@ defmodule Zhuyin.Parsers do
       concat(initials_parser, finals_parser),
       standalone_initials_parser
     ])
-    |> concat(optional(tone_parser))
+    |> concat(tone_parser)
     |> reduce({:to_zhuyin, []})
 
   # Single syllable
