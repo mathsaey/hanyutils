@@ -3,8 +3,8 @@ defmodule Zhuyin.Parsers do
   # Parsing logic for Zhuyin strings
 
   import NimbleParsec
-  alias Pinyin.Parsers.Utils, as: Utils
-  alias Pinyin.Parsers.Wordlist, as: Wordlist
+  alias Pinyin.Parsers.Utils
+  alias Pinyin.Parsers.Wordlist
 
   # Empty tone must be last for parsing to work
   zhuyin_tones = ["˙", "ˊ", "ˇ", "ˋ", ""]
