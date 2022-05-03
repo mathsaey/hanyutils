@@ -6,6 +6,32 @@ defmodule Zhuyin.Parsers do
   alias Pinyin.Parsers.Utils
   alias Pinyin.Parsers.Wordlist
 
+  # ----------------- #
+  # Utility Functions #
+  # ----------------- #
+
+  # Function to get the tone number of a standalone tone marker.
+  # All valid function invocations are generated at compile time.
+  @spec tone_index(String.t()) :: 0..4
+  defp tone_index(tone_char)
+
+  for {marker, idx} <- Enum.with_index(Zhuyin.zhuyin_tones(), 0) do
+    defp tone_index(unquote(marker)), do: unquote(idx)
+  end
+
+  def create(initial, final, tone) do
+    %Zhuyin{initial: initial, final: final, tone: tone_index(tone)}
+  end
+
+  def create(final, tone) do
+    %Zhuyin{final: final, tone: tone_index(tone)}
+  end
+
+  # ------- #
+  # Parsers #
+  # ------- #
+
+
   # Empty tone must be last for parsing to work
   zhuyin_tones = ["˙", "ˊ", "ˇ", "ˋ", ""]
 
@@ -68,8 +94,8 @@ defmodule Zhuyin.Parsers do
 
   tone_parser = zhuyin_tones |> Wordlist.to_parser()
 
-  defp to_zhuyin([initial, final, tone]), do: Zhuyin.create(initial, final, tone)
-  defp to_zhuyin([final, tone]), do: Zhuyin.create(final, tone)
+  defp to_zhuyin([initial, final, tone]), do: create(initial, final, tone)
+  defp to_zhuyin([final, tone]), do: create(final, tone)
 
   syllable_parser =
     choice([
