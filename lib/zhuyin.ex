@@ -177,8 +177,7 @@ defmodule Zhuyin do
   end
 
   def to_pinyin(list) when is_list(list) do
-    list
-    |> Enum.map(fn
+    Enum.map(list, fn
       z = %Zhuyin{} -> Zhuyin.to_pinyin(z)
       str when is_binary(str) -> str
     end)
@@ -216,23 +215,17 @@ defmodule Zhuyin do
   @spec read(String.t(), :exclusive | :words | :mixed) ::
           {:ok, zhuyin_list()} | {:error, String.t()}
   def read(string, mode \\ :exclusive) when mode in [:exclusive, :words, :mixed] do
-    res =
-      case mode do
-        :exclusive -> Zhuyin.Parsers.zhuyin_only(string)
-        :words -> Zhuyin.Parsers.zhuyin_words(string)
-        :mixed -> Zhuyin.Parsers.zhuyin_mix(string)
-      end
-
-    case res do
-      {:ok, lst, "", %{}, _, _} -> {:ok, lst}
-      {:error, _, remainder, %{}, _, _} -> {:error, remainder}
+    case mode do
+      :exclusive -> Zhuyin.Parsers.zhuyin_only(string)
+      :words -> Zhuyin.Parsers.zhuyin_words(string)
+      :mixed -> Zhuyin.Parsers.zhuyin_mix(string)
     end
+    |> parser_result()
   end
 
   @spec read!(String.t(), :exclusive | :words | :mixed) ::
           zhuyin_list() | no_return()
-  def read!(string, mode \\ :exclusive)
-      when mode in [:exclusive, :words, :mixed] do
+  def read!(string, mode \\ :exclusive) when mode in [:exclusive, :words, :mixed] do
     case read(string, mode) do
       {:ok, res} -> res
       {:error, remainder} -> raise ParseError, remainder
@@ -343,16 +336,11 @@ defimpl String.Chars, for: Zhuyin do
 end
 
 defimpl List.Chars, for: Zhuyin do
-  @spec to_charlist(Zhuyin.t()) :: charlist()
-  def to_charlist(p = %Zhuyin{}) do
-    Kernel.to_charlist(to_string(p))
-  end
+  def to_charlist(p = %Zhuyin{}), do: Kernel.to_charlist(to_string(p))
 end
 
 defimpl Inspect, for: Zhuyin do
   import Inspect.Algebra
 
-  def inspect(p = %Zhuyin{}, _) do
-    concat(["#Zhuyin<", to_string(p), ">"])
-  end
+  def inspect(p = %Zhuyin{}, _), do: concat(["#Zhuyin<", to_string(p), ">"])
 end
