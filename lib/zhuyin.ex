@@ -168,12 +168,11 @@ defmodule Zhuyin do
 
   """
   @spec to_pinyin(t() | zhuyin_list()) :: Pinyin.t() | Pinyin.pinyin_list()
-
   def to_pinyin(zhuyin = %Zhuyin{}) do
     if initial = @initials[zhuyin.initial] do
-      %Pinyin{initial: initial, final: @finals[zhuyin.final], tone: zhuyin.tone}
+      %Pinyin{initial: initial, final: Map.fetch!(@finals, zhuyin.final), tone: zhuyin.tone}
     else
-      %Pinyin{initial: "", final: @standalone_finals[zhuyin.final], tone: zhuyin.tone}
+      %Pinyin{initial: "", final: Map.fetch!(@standalone_finals, zhuyin.final), tone: zhuyin.tone}
     end
   end
 
