@@ -13,8 +13,8 @@ defmodule Zhuyin do
   `from_string/1` or `from_string!/1` functions. Like `t:zhuyin_lists/0`, `t:t/0` structs can be
   converted strings through the use of the `to_string/1`functions.
 
-  Additionally both `t:zhuyin_list/0` and zhuyin structs (`t:t/0`) can be created from or converted
-  to pinyin structs (`Pinyin.t:t/0`) using `from_pinyin/1` or `to_pinyin/1` or
+  Additionally both `t:zhuyin_list/0` and zhuyin structs (`t:t/0`) can be created from or
+  converted to pinyin structs (`Pinyin.t:t/0`) using `from_pinyin/1` or `to_pinyin/1` or
   """
 
   alias Zhuyin.Parsers
