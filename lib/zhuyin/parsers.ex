@@ -31,7 +31,6 @@ defmodule Zhuyin.Parsers do
   # Parsers #
   # ------- #
 
-
   # Empty tone must be last for parsing to work
   zhuyin_tones = ["˙", "ˊ", "ˇ", "ˋ", ""]
 
