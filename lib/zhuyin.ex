@@ -35,7 +35,16 @@ defmodule Zhuyin do
 
   # Ordered by which tone number they correspond to
   zhuyin_tones = ["˙", "", "ˊ", "ˇ", "ˋ"]
-  def zhuyin_tones, do: unquote(zhuyin_tones)
+
+  @doc false
+  def _zhuyin_tones, do: unquote(zhuyin_tones)
+
+  @doc false
+  def _tone_for_index(idx)
+
+  for {tone, idx} <- Enum.with_index(zhuyin_tones) do
+    def _tone_for_index(unquote(idx)), do: unquote(tone)
+  end
 
   # ------------------------- #
   # Pinyin Mapping / Creation #
@@ -330,9 +339,7 @@ end
 # --------- #
 
 defimpl String.Chars, for: Zhuyin do
-  def to_string(z = %Zhuyin{}) do
-    z.initial <> z.final <> Enum.at(Zhuyin.zhuyin_tones(), z.tone)
-  end
+  def to_string(z = %Zhuyin{}), do: z.initial <> z.final <> Zhuyin._tone_for_index(z.tone)
 end
 
 defimpl List.Chars, for: Zhuyin do
