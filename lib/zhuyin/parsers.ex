@@ -19,11 +19,11 @@ defmodule Zhuyin.Parsers do
     defp tone_index(unquote(marker)), do: unquote(idx)
   end
 
-  def create(initial, final, tone) do
+  defp create(initial, final, tone) do
     %Zhuyin{initial: initial, final: final, tone: tone_index(tone)}
   end
 
-  def create(final, tone) do
+  defp create(final, tone) do
     %Zhuyin{final: final, tone: tone_index(tone)}
   end
 
