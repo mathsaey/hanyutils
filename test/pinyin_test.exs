@@ -68,12 +68,11 @@ defmodule PinyinTest do
     end
   end
 
-  test "Test mixed" do
-    pinyin = Pinyin.read!("test ㄓㄨni3hao3", :mixed) |> Pinyin.marked()
-    assert pinyin == "test ㄓㄨnǐhǎo"
+  test "read mixed strings" do
+    assert Pinyin.read!("test ㄓㄨni3hao3", :mixed) |> Pinyin.marked() == "test ㄓㄨnǐhǎo"
   end
 
-  test "Standalone syllables that look like they're initial and final" do
+  test "read standalone syllables that look like they're initial and final" do
     assert Pinyin.from_marked!("ci") == %Pinyin{tone: 0, initial: "", final: "ci"}
     assert Pinyin.from_marked!("zi") == %Pinyin{tone: 0, initial: "", final: "zi"}
     assert Pinyin.from_marked!("si") == %Pinyin{tone: 0, initial: "", final: "si"}
