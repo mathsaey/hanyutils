@@ -212,6 +212,69 @@ defmodule Zhuyin do
     end)
   end
 
+  @doc """
+  Read a string and convert it into a list of strings and zhuyin structs.
+
+  This function reads a string containing zhuyin words mixed with normal text. The output of this
+  function is a list of strings and zhuyin structs. White space and punctuation will be separated
+  from other strings.
+
+  ## Parse Modes
+
+  By default, this function only accepts strings which consists exclusively of zhuyin, whitespace
+  and punctuation. Parsing any text that cannot be interpreted as zhuyin will result in an error:
+
+      iex> Zhuyin.read("ㄋㄧˇㄏㄠˇ!")
+      {:ok, [%Zhuyin{initial: "ㄋ", final: "ㄧ", tone: 3}, %Zhuyin{initial: "ㄏ", final: "ㄠ", tone: 3}, "!"]}
+
+      iex> Zhuyin.read("ㄋㄧˇㄏㄠˇ, hello!")
+      {:error, "hello!"}
+
+  This behaviour can be tweaked if zhuyin mixed with regular text needs to be parsed; this can be
+  done by passing a `mode` to this function. There are 3 available modes:
+
+  - `:exclusive`: The default. Every character (except white space and punctuation) is
+    interpreted as zhuyin. If this is not possible, an error is returned.
+  - `:words`: Any word (i.e. a continuous part of the string that does not contain whitespace or
+    punctuation) is either interpreted as a sequence of zhuyin syllables or as non-pinyin text. If
+    a word contains any characters that cannot be interpreted as zhuyin, the whole word is
+    considered to be non-zhuyin text. This mode does not return errors.
+  - `:mixed`: Any word can contain a mixture of zhuyin and non-zhuyin characters. The read
+    function will interpret anything it can interpret as zhuyin as zhuyin and leaves the other
+    text unmodified. This is mainly useful to mix characters and zhuyin. It is recommend to use
+    the `:words` mode when possible instead of this mode, as this mode will often parse regular
+    text as zhuyin text. This mode does not return errors.
+
+  The following examples show the use of all three modes:
+
+      iex> Zhuyin.read("ㄋㄧˇㄏㄠˇ!", :exclusive)
+      {:ok, [%Zhuyin{initial: "ㄋ", final: "ㄧ", tone: 3}, %Zhuyin{initial: "ㄏ", final: "ㄠ", tone: 3}, "!"]}
+
+      iex> Zhuyin.read("ㄋㄧˇㄏㄠˇ, hello!", :exclusive)
+      {:error, "hello!"}
+
+      iex> Zhuyin.read("ㄋㄧˇ好, hello!", :exclusive)
+      {:error, "ㄋㄧˇ好, hello!"}
+
+      iex> Zhuyin.read("ㄋㄧˇㄏㄠˇ!", :words)
+      {:ok, [%Zhuyin{initial: "ㄋ", final: "ㄧ", tone: 3}, %Zhuyin{initial: "ㄏ", final: "ㄠ", tone: 3}, "!"]}
+
+      iex> Zhuyin.read("ㄋㄧˇㄏㄠˇ, hello!", :words)
+      {:ok, [%Zhuyin{initial: "ㄋ", final: "ㄧ", tone: 3}, %Zhuyin{initial: "ㄏ", final: "ㄠ", tone: 3}, ", ", "hello", "!"]}
+
+      iex> Zhuyin.read("ㄋㄧˇ好, hello!", :words)
+      {:ok, ["ㄋㄧˇ好",  ", ", "hello", "!"]}
+
+      iex> Zhuyin.read("ㄋㄧˇㄏㄠˇ!", :mixed)
+      {:ok, [%Zhuyin{initial: "ㄋ", final: "ㄧ", tone: 3}, %Zhuyin{initial: "ㄏ", final: "ㄠ", tone: 3}, "!"]}
+
+      iex> Zhuyin.read("ㄋㄧˇㄏㄠˇ, hello!", :mixed)
+      {:ok, [%Zhuyin{initial: "ㄋ", final: "ㄧ", tone: 3}, %Zhuyin{initial: "ㄏ", final: "ㄠ", tone: 3}, ", ", "hello", "!"]}
+
+      iex> Zhuyin.read("ㄋㄧˇ好, hello!", :mixed)
+      {:ok, [%Zhuyin{initial: "ㄋ", final: "ㄧ", tone: 3}, "好", ", ", "hello", "!"]}
+
+  """
   @spec read(String.t(), :exclusive | :words | :mixed) ::
           {:ok, zhuyin_list()} | {:error, String.t()}
   def read(string, mode \\ :exclusive) when mode in [:exclusive, :words, :mixed] do
@@ -223,6 +286,22 @@ defmodule Zhuyin do
     |> parser_result()
   end
 
+  @doc """
+  Identical to `read/2`, but returns the result or a `ParseError`
+
+  ## Examples
+
+      iex> Zhuyin.read!("ㄋㄧˇㄏㄠˇ!")
+      [%Zhuyin{initial: "ㄋ", final: "ㄧ", tone: 3}, %Zhuyin{initial: "ㄏ", final: "ㄠ", tone: 3}, "!"]
+
+      iex> Zhuyin.read!("ㄋㄧˇㄏㄠˇ, hello!")
+      ** (ParseError) Error occurred when attempting to parse: "hello!"
+
+      iex> Zhuyin.read!("ㄋㄧˇㄏㄠˇ, hello!", :words)
+      [%Zhuyin{initial: "ㄋ", final: "ㄧ", tone: 3}, %Zhuyin{initial: "ㄏ", final: "ㄠ", tone: 3}, ", ", "hello", "!"]
+
+
+  """
   @spec read!(String.t(), :exclusive | :words | :mixed) ::
           zhuyin_list() | no_return()
   def read!(string, mode \\ :exclusive) when mode in [:exclusive, :words, :mixed] do
