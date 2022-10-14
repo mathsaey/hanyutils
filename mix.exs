@@ -18,7 +18,7 @@ defmodule Hanyutils.MixProject do
   defp deps do
     [
       {:nimble_parsec, "~> 1.2"},
-      {:ex_doc, "~> 0.27", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.28", only: :dev, runtime: false},
       {:dialyxir, "~> 1.2", only: [:dev], runtime: false}
     ]
   end
